@@ -1,23 +1,40 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { GoogleMap, LoadScript } from '@react-google-maps/api';
+import { Loader } from '@googlemaps/js-api-loader';
 
+const API_KEY = "AIzaSyDn_2p8NJHqWX_vHzv6MKyV7786XwUGtzo";
+const mapContainerStyle = {
+  height: "100vh",
+  width: "100%"
+};
+const defaultCenter = {
+  lat: 39.7896,
+  lng: 30.5162
+};
+const defaultZoom = 13;
 
-function App() {
+function MapComponent() {
+  const [map, setMap] = useState(null);
+
+  useEffect(() => {
+    const loader = new Loader({
+      apiKey: API_KEY,
+      version: "weekly"
+    });
+
+    loader.load().then(() => {
+      const { google } = window;
+      const mapInstance = new google.maps.Map(document.getElementById("map"), {
+        center: defaultCenter,
+        zoom: defaultZoom
+      });
+      setMap(mapInstance);
+    });
+  }, []);
+
   return (
-    <div>
-      <div style={{display:"flex",justifyContent:"center"}}>
-        <button>
-          Sign in
-        </button>
-        <button>
-          Sign up
-        </button>
-      </div>
-      <div style={{display:"flex", alignContent:"center",justifyContent:"center"}}>
-      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d10312.425341935903!2d30.517380395490452!3d39.78674569721603!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14cc15e397ff02e5%3A0xc7c4c24413b5af1a!2sEspark%20Shopping%20Mall!5e0!3m2!1sen!2str!4v1709916751166!5m2!1sen!2str" width="600" height="450" allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade" title="Google Maps"></iframe>
-    </div>
-    </div>
-    
+    <div id="map" style={mapContainerStyle} />
   );
 }
 
-export default App;
+export default MapComponent;
