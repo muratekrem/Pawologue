@@ -5,7 +5,7 @@ import { Loader } from '@googlemaps/js-api-loader';
 const API_KEY = "AIzaSyDn_2p8NJHqWX_vHzv6MKyV7786XwUGtzo";
 const mapContainerStyle = {
   height: "100vh",
-  width: "100%"
+  width: "200vh"
 };
 const defaultCenter = {
   lat: 39.7896,
@@ -33,7 +33,10 @@ function MapComponent() {
   }, []);
 
   return (
-    <div id="map" style={mapContainerStyle} />
+    <div>
+      <div id="map" style={mapContainerStyle}></div> 
+      
+    </div>
   );
 }
 
