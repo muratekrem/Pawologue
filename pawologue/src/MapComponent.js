@@ -3,10 +3,7 @@ import { GoogleMap, LoadScript } from '@react-google-maps/api';
 import { Loader } from '@googlemaps/js-api-loader';
 
 const API_KEY = "AIzaSyDn_2p8NJHqWX_vHzv6MKyV7786XwUGtzo";
-const mapContainerStyle = {
-  height: "100vh",
-  width: "200vh"
-};
+
 const defaultCenter = {
   lat: 39.7896,
   lng: 30.5162
@@ -34,7 +31,7 @@ function MapComponent() {
 
   return (
     <div>
-      <div id="map" style={mapContainerStyle}></div> 
+      <div id="map" style={{width:"100%", height:"100vh"}}></div> 
       
     </div>
   );
