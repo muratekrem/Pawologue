@@ -10,13 +10,8 @@ import Adopt from "./Adopt/adopt";
 import Rehome from "./Rehome/rehome";
 import dogPhoto from './dog.jpg';
 import catPhoto from './cat.jpg';
+import Button from 'react-bootstrap/Button';
 
-// const [visible, setVisible] = useState({
-//   partnerButton: false ,
-//   login: false ,
-//   petSittingButton : false,
-  
-// });
 
 
 function Navbar() {
@@ -37,12 +32,13 @@ function Navbar() {
       <Link to="/pairing" style={styles.button}>
           Find a Partner
         </Link>
-        <button style={styles.button} >
+        
 
         
       <Link to="/petSitting" style={styles.button}>
           Pet Sitting
-        </Link></button>
+        </Link>
+        
         <Link to="/mapcomponent" style={styles.button}>
           Map Component
         </Link>
