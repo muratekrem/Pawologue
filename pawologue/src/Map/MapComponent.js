@@ -3,6 +3,8 @@ import { GoogleMap, LoadScript } from "@react-google-maps/api";
 import { Loader } from "@googlemaps/js-api-loader";
 import BlueMark from "../blueMark.jpg";
 import RedMark from "../redMark.png";
+import Navbar from "../Navbar";
+
 
 const API_KEY = "AIzaSyDn_2p8NJHqWX_vHzv6MKyV7786XwUGtzo";
 
@@ -73,9 +75,12 @@ function MapComponent() {
     }
   }, [map]);
 
+  
+
   return (
     <div>
-      <div id="map" style={{ width: "100%", height: "100vh" }}></div>
+      <Navbar/>
+      <div id="map" style={{ width: "100%", height: "86vh" }}></div>
     </div>
   );
 }

@@ -10,49 +10,8 @@ import Adopt from "./Adopt/adopt";
 import Rehome from "./Rehome/rehome";
 import dogPhoto from './dog.jpg';
 import catPhoto from './cat.jpg';
+import Navbar from "./Navbar";
 import Button from 'react-bootstrap/Button';
-
-
-
-function Navbar() {
-  return (
-    <div style={styles.navbar}>
-        <Link to="/" style={styles.navbarLink}>
-          <h3>
-            Pawologue
-          </h3>
-          
-        </Link>
-        <Link to="/adopt" style={styles.button}>
-          Adopt a Pet
-        </Link>
-        <Link to="/rehome" style={styles.button}>
-          Find a Home
-        </Link>
-      <Link to="/pairing" style={styles.button}>
-          Find a Partner
-        </Link>
-        
-
-        
-      <Link to="/petSitting" style={styles.button}>
-          Pet Sitting
-        </Link>
-        
-        <Link to="/mapcomponent" style={styles.button}>
-          Map Component
-        </Link>
-      <div>
-        <Link to="/login" style={styles.button}>
-          Login
-        </Link>
-        <Link to="/signup" style={{ ...styles.button, marginLeft: "10px" }}>
-          Sign Up
-        </Link>
-      </div>
-    </div>
-  );
-}
 
 function HomePage() {
   return (
@@ -133,6 +92,12 @@ function HomePage() {
 }
 
 function App() {
+  const [petInfo, setPetInfo] = useState(null);
+
+  // Function to handle submission of pet information from Rehome component
+  const handlePetInfoSubmit = (info) => {
+    setPetInfo(info);
+  };
   return (
     <div style={styles.container}>
       <Router>
@@ -140,8 +105,11 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/adopt" element={<Adopt />} />
-            <Route path="/rehome" element={<Rehome />} />
+            <Route path="/adopt" element={<Adopt petInfo={petInfo} />} />
+            <Route
+              path="/rehome"
+              element={<Rehome onSubmit={handlePetInfoSubmit} />}
+            />
             <Route path="/signup" element={<Signup />} />
             <Route path="/mapcomponent" element={<MapComponent />} />
             <Route path="/pairing" element={<Pairing />} />
@@ -157,23 +125,7 @@ const styles = {
   container: {
     width: "100%",
   },
-  navbar: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    backgroundColor: "#6a1b9a",
-    color: "#fff",
-    padding: "10px 20px",
-    width: "100%",
-    boxSizing: "border-box",
-    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-  },
-  navbarLink: {
-    textDecoration: "none",
-    color: "#fff",
-    fontSize: "1.2rem",
-    fontWeight: "bold",
-  },
+
   button: {
     padding: "8px 16px",
     borderRadius: "5px",
