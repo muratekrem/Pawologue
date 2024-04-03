@@ -92,11 +92,10 @@ function HomePage() {
 }
 
 function App() {
-  const [petInfo, setPetInfo] = useState(null);
+  const [adoptedPets, setAdoptedPets] = useState([]);
 
-  // Function to handle submission of pet information from Rehome component
-  const handlePetInfoSubmit = (info) => {
-    setPetInfo(info);
+  const handleAdopt = (petInfo) => {
+    setAdoptedPets((prevPets) => [...prevPets, petInfo]);
   };
   return (
     <div style={styles.container}>
@@ -105,11 +104,11 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/adopt" element={<Adopt petInfo={petInfo} />} />
-            <Route
-              path="/rehome"
-              element={<Rehome onSubmit={handlePetInfoSubmit} />}
-            />
+            <Route path="/rehome" element={<Rehome onSubmit={handleAdopt} />} />
+          <Route
+            path="/adopt"
+            element={<Adopt adoptedPets={adoptedPets} />}
+          />
             <Route path="/signup" element={<Signup />} />
             <Route path="/mapcomponent" element={<MapComponent />} />
             <Route path="/pairing" element={<Pairing />} />
