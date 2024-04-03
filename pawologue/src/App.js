@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes} from "react-router-dom";
 import Login from "./Login";
 import Signup from "./Signup";
 import MapComponent from "./Map/MapComponent";
@@ -11,7 +11,6 @@ import Rehome from "./Rehome/rehome";
 import dogPhoto from './dog.jpg';
 import catPhoto from './cat.jpg';
 import Navbar from "./Navbar";
-import Button from 'react-bootstrap/Button';
 
 function HomePage() {
   return (

@@ -37,3 +37,8 @@
 .rehome-container button:hover {
     background-color: #0056b3;
 }
+button[disabled] {
+    background-color: #d3d3d3; /* Dull grey */
+    color: #808080; /* Dark grey */
+  }
+  
