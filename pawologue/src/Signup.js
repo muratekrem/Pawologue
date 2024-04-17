@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
+import app from './firebase';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom'; // useHistory yerine useNavigate kullanıyoruz
 
-function Signup() {
+function Signup({ onSignup }) {
+  const navigate = useNavigate(); // useNavigate kancasını kullanarak tarayıcı geçişini yönetebiliriz
+
   const [formData, setFormData] = useState({
-    username: '',
+    email: '',
     password: '',
     confirmPassword: '',
     name: '',
@@ -12,6 +17,8 @@ function Signup() {
   });
 
   const [phoneNumberError, setPhoneNumberError] = useState(false);
+  const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState(''); // Kayıt başarılı olduğunda görüntülenecek mesaj
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -26,7 +33,7 @@ function Signup() {
           ...formData,
           [name]: value
         });
-      } else if (value.match(/^\+90\d{0,10}$/)) { 
+      } else if (value.match(/^\+90\d{0,10}$/)) {
         setFormData({
           ...formData,
           [name]: value
@@ -40,18 +47,29 @@ function Signup() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      alert("Passwords don't match");
-      return;
+
+    try {
+      const auth = getAuth();
+      await createUserWithEmailAndPassword(auth, formData.email, formData.password);
+      
+      // Başarılı kayıt durumunda, burada setUserName veya benzeri bir fonksiyonla kullanıcı adını navbar'a iletilebilir
+      if (onSignup) {
+        onSignup(formData.name);
+      }
+      console.log('User registered successfully!');
+
+      // Kayıt başarılı olduğunda successMessage state'ini güncelle
+      setSuccessMessage('Your registration to the system has been successfully created.');
+
+      // Başarılı kayıt durumunda anasayfaya yönlendirme işlemi
+      setTimeout(() => {
+        navigate('/'); // Anasayfaya yönlendirme
+      }, 5000); // 5 saniye sonra yönlendirme yapılacak
+    } catch (error) {
+      setError(error.message);
     }
-    if (!validatePhoneNumber(formData.phoneNumber)) {
-      setPhoneNumberError(true);
-      return;
-    }
-    setPhoneNumberError(false);
-    console.log('Form submitted:', formData);
   };
 
   const validatePhoneNumber = (phoneNumber) => {
@@ -66,8 +84,8 @@ function Signup() {
         <h2 style={styles.title}>Sign Up</h2>
         <form onSubmit={handleSubmit}>
           <div style={styles.inputGroup}>
-            <label htmlFor="username" style={styles.label}>Username:</label>
-            <input type="text" id="username" name="username" style={styles.input} onChange={handleChange} required />
+            <label htmlFor="email" style={styles.label}>E-Mail:</label>
+            <input type="email" id="email" name="email" style={styles.input} onChange={handleChange} required />
           </div>
           <div style={styles.inputGroup}>
             <label htmlFor="password" style={styles.label}>Password:</label>
@@ -99,6 +117,10 @@ function Signup() {
           </div>
         </form>
       </div>
+      {/* Kayıt başarılı olduğunda görüntülenecek mesaj */}
+      {successMessage && <p style={styles.successMessage}>{successMessage}</p>}
+      {/* Hata mesajı */}
+      {error && <p style={styles.error}>{error}</p>}
     </div>
   );
 }
@@ -124,11 +146,11 @@ const styles = {
     textTransform: 'uppercase',
     fontWeight: 'bold',
     fontSize: '24px',
-    marginBottom: '10px',
+    marginBottom: '20px',
   },
   title: {
     color: '#6a1b9a',
-    marginBottom: '20px',
+    marginBottom: '30px',
   },
   inputGroup: {
     display: 'flex',
@@ -166,6 +188,12 @@ const styles = {
     fontSize: '12px',
     textAlign: 'left',
     marginLeft: '130px', 
+  },
+  successMessage: {
+    color: 'green',
+    fontSize: '14px',
+    textAlign: 'center',
+    marginTop: '10px',
   },
 };
 

@@ -1,22 +1,58 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom'; // useNavigate hook'u ekledik
 
 function Login() {
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
+
+  const [error, setError] = useState('');
+  const navigate = useNavigate(); // useNavigate hook'unu tanımladık
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const auth = getAuth();
+      await signInWithEmailAndPassword(auth, formData.email, formData.password);
+      console.log('User logged in successfully!');
+      // Giriş başarılı olduğunda yapılacak işlemler buraya eklenir
+      navigate('/'); // Anasayfaya yönlendirme
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
   return (
     <div style={styles.container}>
       <h1 style={styles.logo}>PAWOLOGUE</h1>
       <div style={styles.formContainer}>
         <h2 style={styles.title}>Login</h2>
-        <div style={styles.inputGroup}>
-          <label htmlFor="username" style={styles.label}>Username:</label>
-          <input type="text" id="username" name="username" style={styles.input} />
-        </div>
-        <div style={styles.inputGroup}>
-          <label htmlFor="password" style={styles.label}>Password:</label>
-          <input type="password" id="password" name="password" style={styles.input} />
-        </div>
-        <div style={styles.inputGroup}>
-          <button style={styles.button}>Login</button>
-        </div>
+        <form onSubmit={handleSubmit}>
+          <div style={styles.inputGroup}>
+            <label htmlFor="email" style={styles.label}>E-Mail:</label>
+            <input type="email" id="email" name="email" style={styles.input} onChange={handleChange} required />
+          </div>
+          <div style={styles.inputGroup}>
+            <label htmlFor="password" style={styles.label}>Password:</label>
+            <input type="password" id="password" name="password" style={styles.input} onChange={handleChange} required />
+          </div>
+          <div style={styles.inputGroup}>
+            <button type="submit" style={styles.button}>Login</button>
+          </div>
+        </form>
+        {/* Hata mesajı */}
+        {error && <p style={styles.error}>{error}</p>}
         <div style={styles.forgotPassword}>
           <a href="#" style={styles.link}>Forgot my password?</a>
         </div>
@@ -95,6 +131,11 @@ const styles = {
     border: 'none',
     borderRadius: '5px',
     cursor: 'pointer',
+  },
+  error: {
+    color: 'red',
+    fontSize: '12px',
+    textAlign: 'center',
   },
 };
 
