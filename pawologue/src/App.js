@@ -12,18 +12,22 @@ import Rehome from "./Rehome/rehome";
 import Homepage from "./Homepage/homepage";
 
 function App() {
-  
+  const [adoptedPets, setAdoptedPets] = useState([]);
+
+  const handleAdopt = (petInfo) => {
+    setAdoptedPets((prevPets) => [...prevPets, petInfo]);
+  };
 
   return (
     <div style={styles.container}>
       <Router>
         <div className="App">
           <Routes>
-            <Route exact path="/" element={<Homepage/>} />
+            <Route exact path="/" element={<Homepage />} />
             <Route path="/homepage" element={<Homepage />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/rehome" element={<Rehome />} />
-            <Route path="/adopt" element={<Adopt />} />
+            <Route path="/rehome" element={<Rehome onSubmit={handleAdopt} />} />
+            <Route path="/adopt" element={<Adopt adoptedPets={adoptedPets} />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/mapcomponent" element={<MapComponent />} />
             <Route path="/pairing" element={<Pairing />} />
@@ -42,4 +46,3 @@ const styles = {
 };
 
 export default App;
-

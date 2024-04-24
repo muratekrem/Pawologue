@@ -19,7 +19,7 @@ const Adopt = ({ adoptedPets }) => {
               return (
                 <div key={index} className="pet-card">
                   {pet.photo && (
-                    <img src={URL.createObjectURL(pet.photo)} alt="" width={250} />
+                    <img src={URL.createObjectURL(pet.photo)} alt="" width={300} height={300}/>
                   )}
                   <p>Name: {pet.name}</p>
                   <p>Age: {pet.age}</p>
@@ -39,7 +39,7 @@ const Adopt = ({ adoptedPets }) => {
               return (
                 <div key={index} className="pet-card">
                   {pet.photo && (
-                    <img src={URL.createObjectURL(pet.photo)} alt="" width={250} />
+                    <img src={URL.createObjectURL(pet.photo)} alt="" width={300} height={300} />
                   )}
                   <p>Name: {pet.name}</p>
                   <p>Age: {pet.age}</p>
