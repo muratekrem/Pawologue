@@ -26,8 +26,9 @@ function Login() {
       const auth = getAuth();
       await signInWithEmailAndPassword(auth, formData.email, formData.password);
       console.log('User logged in successfully!');
+      console.log(formData.email);
       // Giriş başarılı olduğunda yapılacak işlemler buraya eklenir
-      navigate('/'); // Anasayfaya yönlendirme
+      navigate('/', { state: { email: formData.email } }); // Anasayfaya yönlendirme ve e-postayı ilete
     } catch (error) {
       setError(error.message);
     }
