@@ -5,14 +5,7 @@ import Navbar from "../Navbar";
 import { useLocation } from "react-router-dom";
 
 function HomePage() {
-  const [email, setEmail] = useState("");
-  const location = useLocation();
-
-  useEffect(() => {
-    if (location.state && location.state.email) {
-      setEmail(location.state.email);
-    }
-  }, [location]);
+  
 
   return (
     <div
@@ -24,7 +17,6 @@ function HomePage() {
     >
       <Navbar />
       <h1>Welcome to Pawologue</h1>
-      <p>Email: {email}</p>
       <div style={{ display: "flex", justifyContent: "center" }}>
         <div style={{ margin: "20px", alignItems: "center" }}>
           <p>

@@ -1,5 +1,3 @@
-// App.js
-
 import React, { useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Login from "./Login";
@@ -10,6 +8,7 @@ import PetSitting from "./PetSitting/petSitting";
 import Adopt from "./Adopt/adopt";
 import Rehome from "./Rehome/rehome";
 import Homepage from "./Homepage/homepage";
+import Profile from "./Profile/profile";
 
 function App() {
   const [adoptedPets, setAdoptedPets] = useState([]);
@@ -32,6 +31,8 @@ function App() {
             <Route path="/mapcomponent" element={<MapComponent />} />
             <Route path="/pairing" element={<Pairing />} />
             <Route path="/petSitting" element={<PetSitting />} />
+            <Route path="/profile" element={<Profile />} />
+
           </Routes>
         </div>
       </Router>
