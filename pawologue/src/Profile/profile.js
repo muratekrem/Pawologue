@@ -3,14 +3,14 @@ import Navbar from "../Navbar";
 
 function profile(){
 
-const [email, setEmail] = useState("");
-const location = useLocation();
+// const [email, setEmail] = useState("");
+// const location = useLocation();
 
-  useEffect(() => {
-    if (location.state && location.state.email) {
-      setEmail(location.state.email);
-    }
-  }, [location]);
+//   useEffect(() => {
+//     if (location.state && location.state.email) {
+//       setEmail(location.state.email);
+//     }
+//   }, [location]);
 
     return(
         <div>
