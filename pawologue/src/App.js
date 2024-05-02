@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, useNavigate } from "react-router-dom";
 import Login from "./Login";
 import Signup from "./Signup";
 import MapComponent from "./Map/MapComponent";
@@ -9,6 +9,7 @@ import Adopt from "./Adopt/adopt";
 import Rehome from "./Rehome/rehome";
 import Homepage from "./Homepage/homepage";
 import Profile from "./Profile/profile";
+import Deneme from "./deneme";
 
 function App() {
   const [adoptedPets, setAdoptedPets] = useState([]);
@@ -19,10 +20,11 @@ function App() {
 
   return (
     <div style={styles.container}>
-      <Router>
+      <Router> {/* Router bileşeni ile App bileşenini sarmalayın */}
         <div className="App">
           <Routes>
             <Route exact path="/" element={<Homepage />} />
+            <Route path="/deneme" element={<Deneme />} />
             <Route path="/homepage" element={<Homepage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/rehome" element={<Rehome onSubmit={handleAdopt} />} />
@@ -32,7 +34,6 @@ function App() {
             <Route path="/pairing" element={<Pairing />} />
             <Route path="/petSitting" element={<PetSitting />} />
             <Route path="/profile" element={<Profile />} />
-
           </Routes>
         </div>
       </Router>

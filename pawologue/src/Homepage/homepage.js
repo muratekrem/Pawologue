@@ -2,10 +2,8 @@ import React, { useState, useEffect } from "react";
 import dogPhoto from "../dog.jpg";
 import catPhoto from "../cat.jpg";
 import Navbar from "../Navbar";
-import { useLocation } from "react-router-dom";
 
 function HomePage() {
-  
 
   return (
     <div
