@@ -9,7 +9,7 @@ import Adopt from "./Adopt/adopt";
 import Rehome from "./Rehome/rehome";
 import Homepage from "./Homepage/homepage";
 import Profile from "./Profile/profile";
-import Deneme from "./deneme";
+
 
 function App() {
   const [adoptedPets, setAdoptedPets] = useState([]);
@@ -24,7 +24,7 @@ function App() {
         <div className="App">
           <Routes>
             <Route exact path="/" element={<Homepage />} />
-            <Route path="/deneme" element={<Deneme />} />
+            
             <Route path="/homepage" element={<Homepage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/rehome" element={<Rehome onSubmit={handleAdopt} />} />

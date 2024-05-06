@@ -49,20 +49,41 @@ function Signup({ onSignup }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
       const auth = getAuth();
       await createUserWithEmailAndPassword(auth, formData.email, formData.password);
       
+      // Kullanıcı verilerini Firestore'a gönderme
+      const res = await fetch("https://pawologue-default-rtdb.firebaseio.com/UserData.json", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          name: formData.name,
+          surname: formData.surname,
+          phoneNumber: formData.phoneNumber,
+          birthday: formData.birthday
+        })
+        
+      });
+      if(res){
+        alert("Message Sent")
+    } else {
+        alert("Error")
+    }
+  
       // Başarılı kayıt durumunda, burada setUserName veya benzeri bir fonksiyonla kullanıcı adını navbar'a iletilebilir
       if (onSignup) {
         onSignup(formData.name);
       }
       console.log('User registered successfully!');
-
+  
       // Kayıt başarılı olduğunda successMessage state'ini güncelle
       setSuccessMessage('Your registration to the system has been successfully created.');
-
+  
       // Başarılı kayıt durumunda anasayfaya yönlendirme işlemi
       setTimeout(() => {
         navigate('/'); // Anasayfaya yönlendirme
@@ -71,6 +92,7 @@ function Signup({ onSignup }) {
       setError(error.message);
     }
   };
+  
 
   const validatePhoneNumber = (phoneNumber) => {
     const regex = /^\+90\d{10}$/;

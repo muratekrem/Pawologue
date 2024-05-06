@@ -1,45 +1,43 @@
-import React, { useState, useEffect } from "react";
-import Navbar from "../Navbar";
-import { useLocation } from "react-router-dom";
+// import React, { useState, useEffect } from 'react';
+// import app from '../firebase'; // Firebase bağlantısını içe aktarın
+// import {get, ref} from "firebase/database";
+// import database from "../firebase";
 
-function Profile() {
-    const [email, setEmail] = useState("");
-    const location = useLocation();
+// function Profile() {
+//   const [userData, setUserData] = useState([]); // Kullanıcı verilerini saklamak için bir state
+
+//   useEffect(() => {
+//     // Firebase'den kullanıcı verilerini almak için bir fonksiyon tanımlayın
+//     const userDataRef = ref(database ,"UserData");
+//     get(userDataRef).then((snapshot)=>{
+//         if(snapshot.exists()){
+//             const usersArray = Object.entries(snapshot.val()).map(([id , data])=>({
+//                 id , ...data,
+//             }))
+//             setUserData(usersArray);
+//         } else {
+//             console.log("Data not available")
+//         }
+//     }).catch((error) =>{
+//         console.error(error);
+//     })
+
     
-    useEffect(() => {
-        if (location.state && location.state.email) {
-            setEmail(location.state.email);
-        }
-    }, [location]);
+//   },[]);
 
-    return (
-        <div>
-             <Navbar />
-            <div style={{display:"flex" , justifyContent:"space-around" }}>
-                <div style={{border: "2px dotted black", width:"30%" , marginTop:"100px ", height:"40vh"}}>
-                    <h2 style={{display:"flex", justifyContent:"center" , borderBottom:"2px dotted"}}>Profile Information</h2>
-                    <div style={{justifyContent:"center", marginLeft:"5px"}}>
-                    <p>Email: {email}</p>
-                    <p>Name: </p>
-                    <p>Surname: </p>
-                    <p>Phone Number: </p>
-                    <p>Birthday: </p>
-                    </div>
-                    
-                </div>
-                <div style={{border: "2px dotted black", width:"30%" , marginTop:"100px ", height:"60vh"}}>
-                    <h2 style={{display:"flex", justifyContent:"center" , borderBottom:"2px dotted"}}>Chat </h2>
-                    <div style={{justifyContent:"center", marginLeft:"5px"}}>
-                   
-                    
-                    </div>
-                    
-                </div>
-            </div>
-        
-        </div>
-        
-    );
-}
+//   return (
+//     <div>
+//       {userData.map((user) =>(
+//         <div key={user.id}>
+//             <h2>{user.email}</h2>
+//             <p>{user.name}</p>
+//             <p>{user.surname}</p>
+//             <p>{user.birthday}</p>
+//             <p>{user.phoneNumber}</p>
+//             </div>
+//       ))}
+//     </div>
+//   );
+// }
 
-export default Profile;
+// export default Profile;

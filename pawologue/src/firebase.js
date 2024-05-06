@@ -2,11 +2,12 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore"; // Firestore için getFirestore fonksiyonunu içe aktar
-
+import { getDatabase } from "firebase/database";
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyC9ZWVRFaUQ-G4fW9TMqF4proyDZuDeyf4",
   authDomain: "pawologue.firebaseapp.com",
+  databaseURL:"https://pawologue-default-rtdb.firebaseio.com/",
   projectId: "pawologue",
   storageBucket: "pawologue.appspot.com",
   messagingSenderId: "299086677755",
@@ -16,5 +17,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const database = getDatabase(app);
 
-export {db }; // db nesnesini export et
+export default {db,app,database}; // db nesnesini export et
