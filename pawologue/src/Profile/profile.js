@@ -41,3 +41,38 @@
 // }
 
 // export default Profile;
+
+import React, { Suspense, useEffect, useState } from "react";
+
+
+
+import  db  from "../firebase";
+import { onValue, ref } from "firebase/database";
+
+
+function Profile() {
+  const [projects, setProjects] = useState([]);
+
+  useEffect(() => {
+    const query = ref(db, "UserData");
+    return onValue(query, (snapshot) => {
+      const data = snapshot.val();
+
+      if (snapshot.exists()) {
+        Object.values(data).map((project) => {
+          setProjects((projects) => [...projects, project]);
+        });
+      }
+    });
+  }, []);
+
+  return (
+    <div >
+      {projects.map((project, index) => (
+        <div {...project} key={index} />
+      ))}
+    </div>
+  );
+}
+
+export default Profile;
