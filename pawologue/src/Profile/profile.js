@@ -42,35 +42,62 @@
 
 // export default Profile;
 
-import React, { Suspense, useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 
-
-
-import  db  from "../firebase";
-import { onValue, ref } from "firebase/database";
-
+const fetchData = async () => {
+  try {
+    const response = await fetch("https://pawologue-default-rtdb.firebaseio.com/UserData.json");
+    if (!response.ok) {
+      throw new Error('Failed to fetch data');
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching data:', error.message);
+    return null;
+  }
+};
 
 function Profile() {
-  const [projects, setProjects] = useState([]);
+  const [userData, setUserData] = useState([]);
 
   useEffect(() => {
-    const query = ref(db, "UserData");
-    return onValue(query, (snapshot) => {
-      const data = snapshot.val();
-
-      if (snapshot.exists()) {
-        Object.values(data).map((project) => {
-          setProjects((projects) => [...projects, project]);
-        });
+    const fetchDataFromFirebase = async () => {
+      try {
+        const data = await fetchData();
+        if (data) {
+          // Convert the nested object into an array of user objects
+          const userDataArray = Object.values(data);
+          setUserData(userDataArray);
+          console.log(userDataArray); // Log the array of user objects
+          console.log(userDataArray[0].email); // Access email of the first user
+        } else {
+          console.log("No data available in Firebase");
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error.message);
       }
-    });
+    };
+  
+    fetchDataFromFirebase();
   }, []);
 
   return (
-    <div >
-      {projects.map((project, index) => (
-        <div {...project} key={index} />
-      ))}
+    <div>
+      <h1>User Profile</h1>
+      {userData ? (
+        userData.map(user => (
+          <div key={user.email}>
+            <p>Email: {user.email}</p>
+            <p>Name: {user.name}</p>
+            <p>Surname: {user.surname}</p>
+            <p>Phone Number: {user.phoneNumber}</p>
+            <p>Birthday: {user.birthday}</p>
+          </div>
+        ))
+      ) : (
+        <p>Loading...</p>
+      )}
     </div>
   );
 }
