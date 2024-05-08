@@ -24,7 +24,6 @@ function App() {
         <div className="App">
           <Routes>
             <Route exact path="/" element={<Homepage />} />
-            
             <Route path="/homepage" element={<Homepage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/rehome" element={<Rehome onSubmit={handleAdopt} />} />

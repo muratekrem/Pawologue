@@ -38,6 +38,8 @@ function Navbar() {
   const handleLogout = () => {
     signOut(auth)
       .then(() => {
+        // Clear currentUser from local storage
+        localStorage.removeItem('currentUser');
         // Başarıyla çıkış yapıldığında yapılacak işlemler
         console.log("User logged out successfully!");
         // Kullanıcıyı "/" yoluna yönlendir
@@ -62,9 +64,6 @@ function Navbar() {
       </Link>
       <Link to="/pairing" style={styles.button}>
         Find a Partner
-      </Link>
-      <Link to="/deneme" style={styles.button}>
-        Deneme
       </Link>
       <Link to="/petSitting" style={styles.button}>
         Pet Sitting

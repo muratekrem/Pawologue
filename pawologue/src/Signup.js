@@ -70,9 +70,9 @@ function Signup({ onSignup }) {
         
       });
       if(res){
-        alert("Message Sent")
+        console.log("Message sent to database")
     } else {
-        alert("Error")
+        console.log("Message didn't send. Error!")
     }
   
       // Başarılı kayıt durumunda, burada setUserName veya benzeri bir fonksiyonla kullanıcı adını navbar'a iletilebilir
@@ -86,8 +86,8 @@ function Signup({ onSignup }) {
   
       // Başarılı kayıt durumunda anasayfaya yönlendirme işlemi
       setTimeout(() => {
-        navigate('/'); // Anasayfaya yönlendirme
-      }, 5000); // 5 saniye sonra yönlendirme yapılacak
+        navigate('/login'); // Anasayfaya yönlendirme
+      }, 3000); // 3 saniye sonra yönlendirme yapılacak
     } catch (error) {
       setError(error.message);
     }

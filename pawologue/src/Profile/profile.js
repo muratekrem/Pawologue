@@ -1,105 +1,135 @@
-// import React, { useState, useEffect } from 'react';
-// import app from '../firebase'; // Firebase bağlantısını içe aktarın
-// import {get, ref} from "firebase/database";
-// import database from "../firebase";
-
-// function Profile() {
-//   const [userData, setUserData] = useState([]); // Kullanıcı verilerini saklamak için bir state
-
-//   useEffect(() => {
-//     // Firebase'den kullanıcı verilerini almak için bir fonksiyon tanımlayın
-//     const userDataRef = ref(database ,"UserData");
-//     get(userDataRef).then((snapshot)=>{
-//         if(snapshot.exists()){
-//             const usersArray = Object.entries(snapshot.val()).map(([id , data])=>({
-//                 id , ...data,
-//             }))
-//             setUserData(usersArray);
-//         } else {
-//             console.log("Data not available")
-//         }
-//     }).catch((error) =>{
-//         console.error(error);
-//     })
-
-    
-//   },[]);
-
-//   return (
-//     <div>
-//       {userData.map((user) =>(
-//         <div key={user.id}>
-//             <h2>{user.email}</h2>
-//             <p>{user.name}</p>
-//             <p>{user.surname}</p>
-//             <p>{user.birthday}</p>
-//             <p>{user.phoneNumber}</p>
-//             </div>
-//       ))}
-//     </div>
-//   );
-// }
-
-// export default Profile;
-
 import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import io from 'socket.io-client'; // Import Socket.io client
+import Navbar from "../Navbar";
 
-const fetchData = async () => {
-  try {
-    const response = await fetch("https://pawologue-default-rtdb.firebaseio.com/UserData.json");
-    if (!response.ok) {
-      throw new Error('Failed to fetch data');
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Error fetching data:', error.message);
-    return null;
-  }
-};
+const socket = io('http://localhost:3001'); // Connect to the server
 
 function Profile() {
   const [userData, setUserData] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const location = useLocation();
+
+  useEffect(() => {
+    console.log('Location:', location);
+  }, [location]);
+
+  // Load currentUser from local storage when component mounts
+  useEffect(() => {
+    // Load currentUser from local storage
+    const storedCurrentUser = localStorage.getItem(`currentUser`);
+    if (storedCurrentUser) {
+      setCurrentUser(JSON.parse(storedCurrentUser));
+    }
+  }, []);
+  
 
   useEffect(() => {
     const fetchDataFromFirebase = async () => {
       try {
-        const data = await fetchData();
-        if (data) {
-          // Convert the nested object into an array of user objects
-          const userDataArray = Object.values(data);
-          setUserData(userDataArray);
-          console.log(userDataArray); // Log the array of user objects
-          console.log(userDataArray[0].email); // Access email of the first user
-        } else {
-          console.log("No data available in Firebase");
+        const response = await fetch("https://pawologue-default-rtdb.firebaseio.com/UserData.json");
+        if (!response.ok) {
+          throw new Error('Failed to fetch data');
         }
+        const data = await response.json();
+        setUserData(data);
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error.message);
+        setLoading(false);
       }
     };
-  
+
     fetchDataFromFirebase();
   }, []);
 
+  useEffect(() => {
+    if (!loading && location.state && location.state.email) {
+      const emailToFind = location.state.email;
+      let foundUser = null;
+      for (const userId in userData) {
+        if (Object.prototype.hasOwnProperty.call(userData, userId)) {
+          const user = userData[userId];
+          if (user.email === emailToFind) {
+            foundUser = user;
+            break; // Exit loop if user is found
+          }
+        }
+      }
+      setCurrentUser(foundUser);
+      // Store currentUser in local storage with a generic key
+      localStorage.setItem(`currentUser`, JSON.stringify(foundUser));
+    }
+  }, [location.state, userData, loading]);
+  
+  useEffect(() => {
+    if (!loading && currentUser) {
+      emitCurrentUserToServer(currentUser);
+    }
+  }, []);
+
+  const emitCurrentUserToServer = (user) => {
+    socket.emit('current_user', user);
+  };
+
   return (
     <div>
-      <h1>User Profile</h1>
-      {userData ? (
-        userData.map(user => (
-          <div key={user.email}>
-            <p>Email: {user.email}</p>
-            <p>Name: {user.name}</p>
-            <p>Surname: {user.surname}</p>
-            <p>Phone Number: {user.phoneNumber}</p>
-            <p>Birthday: {user.birthday}</p>
+      <Navbar/>
+    
+    <div style={styles.container}>
+      <h1 style={{display:"flex", justifyContent:"center"}}>User Profile</h1>
+      {loading && <p>Loading...</p>}
+      {!loading && currentUser ? (
+        <div style={{display:"flex" , justifyContent:"center", alignItems:"center"}}>
+          <div style={styles.profileBox}>
+          <div style={styles.row}>
+            <span>Email: </span>
+            <span>{currentUser.email}</span>
           </div>
-        ))
+          <div style={styles.row}>
+            <span>Name: </span>
+            <span>{currentUser.name}</span>
+          </div>
+          <div style={styles.row}>
+            <span>Surname: </span>
+            <span>{currentUser.surname}</span>
+          </div>
+          <div style={styles.row}>
+            <span>Phone Number: </span>
+            <span>{currentUser.phoneNumber}</span>
+          </div>
+          <div style={styles.row}>
+            <span>Birthday: </span>
+            <span>{currentUser.birthday}</span>
+          </div>
+          </div>
+        </div>
       ) : (
-        <p>Loading...</p>
+        !loading && <p>No user found</p>
       )}
+    </div>
     </div>
   );
 }
+
+const styles = {
+  container: {
+    padding: '20px',
+  },
+  profileBox: {
+    
+    
+    border: '1px solid #ccc',
+    borderRadius: '5px',
+    padding: '20px',
+  },
+  row: {
+    display: 'flex',
+    
+    marginBottom: '10px',
+  },
+};
 
 export default Profile;
