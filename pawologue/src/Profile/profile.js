@@ -24,7 +24,6 @@ function Profile() {
       setCurrentUser(JSON.parse(storedCurrentUser));
     }
   }, []);
-  
 
   useEffect(() => {
     const fetchDataFromFirebase = async () => {
@@ -61,55 +60,48 @@ function Profile() {
       setCurrentUser(foundUser);
       // Store currentUser in local storage with a generic key
       localStorage.setItem(`currentUser`, JSON.stringify(foundUser));
+
+      // Emit currentUser data to the server
+      console.log(currentUser);
+      socket.emit('current_user', foundUser); // Sending currentUser data to the server
     }
   }, [location.state, userData, loading]);
-  
-  useEffect(() => {
-    if (!loading && currentUser) {
-      emitCurrentUserToServer(currentUser);
-    }
-  }, []);
-
-  const emitCurrentUserToServer = (user) => {
-    socket.emit('current_user', user);
-  };
 
   return (
     <div>
-      <Navbar/>
-    
-    <div style={styles.container}>
-      <h1 style={{display:"flex", justifyContent:"center"}}>User Profile</h1>
-      {loading && <p>Loading...</p>}
-      {!loading && currentUser ? (
-        <div style={{display:"flex" , justifyContent:"center", alignItems:"center"}}>
-          <div style={styles.profileBox}>
-          <div style={styles.row}>
-            <span>Email: </span>
-            <span>{currentUser.email}</span>
+      <Navbar />
+      <div style={styles.container}>
+        <h1 style={{ display: "flex", justifyContent: "center" }}>User Profile</h1>
+        {loading && <p>Loading...</p>}
+        {!loading && currentUser ? (
+          <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <div style={styles.profileBox}>
+              <div style={styles.row}>
+                <span>Email: </span>
+                <span>{currentUser.email}</span>
+              </div>
+              <div style={styles.row}>
+                <span>Name: </span>
+                <span>{currentUser.name}</span>
+              </div>
+              <div style={styles.row}>
+                <span>Surname: </span>
+                <span>{currentUser.surname}</span>
+              </div>
+              <div style={styles.row}>
+                <span>Phone Number: </span>
+                <span>{currentUser.phoneNumber}</span>
+              </div>
+              <div style={styles.row}>
+                <span>Birthday: </span>
+                <span>{currentUser.birthday}</span>
+              </div>
+            </div>
           </div>
-          <div style={styles.row}>
-            <span>Name: </span>
-            <span>{currentUser.name}</span>
-          </div>
-          <div style={styles.row}>
-            <span>Surname: </span>
-            <span>{currentUser.surname}</span>
-          </div>
-          <div style={styles.row}>
-            <span>Phone Number: </span>
-            <span>{currentUser.phoneNumber}</span>
-          </div>
-          <div style={styles.row}>
-            <span>Birthday: </span>
-            <span>{currentUser.birthday}</span>
-          </div>
-          </div>
-        </div>
-      ) : (
-        !loading && <p>No user found</p>
-      )}
-    </div>
+        ) : (
+          !loading && <p>No user found</p>
+        )}
+      </div>
     </div>
   );
 }
@@ -119,15 +111,12 @@ const styles = {
     padding: '20px',
   },
   profileBox: {
-    
-    
     border: '1px solid #ccc',
     borderRadius: '5px',
     padding: '20px',
   },
   row: {
     display: 'flex',
-    
     marginBottom: '10px',
   },
 };
