@@ -1,10 +1,22 @@
 // Rehome.js
 
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import Navbar from "../Navbar";
 import "./rehome.css"; // Import CSS file for styling
 
 const Rehome = ({ onSubmit }) => {
+  const [currentUser, setCurrentUser] = useState(null); // currentUser state'i tanımla
+
+  useEffect(() => {
+    // localStorage'dan currentUser'ı al
+    const storedCurrentUser = localStorage.getItem(`currentUser`);
+    if (storedCurrentUser) {
+      setCurrentUser(JSON.parse(storedCurrentUser));
+      console.log("123");
+      console.log(JSON.parse(storedCurrentUser)); // Güncel currentUser değerini göster
+    }
+  }, []); // currentUser bağımlılık dizisine eklendi
+  console.log(currentUser);
   const [petInfo, setPetInfo] = useState({
     name: "",
     age: "",
@@ -73,7 +85,12 @@ const Rehome = ({ onSubmit }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(petInfo);
+    const updatedPetInfo = {
+      ...petInfo,
+      createdBy: currentUser.name + " " + currentUser.surname
+    };
+    onSubmit(updatedPetInfo);
+    console.log(updatedPetInfo);
     setPetInfo((prevState) => ({
       ...prevState,
       submitDone: true
@@ -91,6 +108,8 @@ const Rehome = ({ onSubmit }) => {
     });
     setDogSelected(false);
     setCatSelected(false);
+
+    
   };
 
   return (
@@ -152,6 +171,7 @@ const Rehome = ({ onSubmit }) => {
           {petInfo.submitDone && <p>We hope the life lives in a home, submit is done.</p>}
         </form>
       </div>
+      <div>My Notices</div>
     </div>
   );
 };

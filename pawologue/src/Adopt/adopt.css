@@ -1,26 +1,65 @@
-/* Adopt.css */
+/* adopt.css */
+.pet-content {
+  padding: 10px;
+  margin: 0 5px; /* İçeriği sarmalayan boşluk */
+
+}
+
+.pet-details {
+  display: flex;
+  flex-direction: column; /* Metin içeriğini dikey olarak sıralama */
+  align-items: center; /* İçeriği yatayda ortala */
+}
 
 .pet-container {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
 }
-
+.pet-info-text{
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  
+}
 .column {
-  flex-basis: 49%;
+  width: 100%; 
 }
 
 .divider {
-  border-left: 1px solid black;
+  
   height: 100%;
   margin: 0 10px;
 }
 
 .pet-card {
-  margin-bottom: 20px;
+  width: calc(32% - 30px); /* İki ilanı yan yana sığdırmak için %50 genişlik, kenar boşluğunu da düşünerek 10px çıkarıyoruz */
+  margin-bottom: 20px; /* İlanlar arasında boşluk bırak */
+  padding: 10px;
+  border: 3px solid #ccc; /* Border ekleme */
+}
+.pet-card-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around; /* İlan kartlarını eşit şekilde dağıt */
 }
 
 .pet-card img {
   max-width: 100%;
   height: auto;
+  display: block;
+  margin: 0 auto;
+}
+p{
+  display: flex;
+  justify-content: center;
+}
+
+.button {
+  padding: 8px 16px;
+  border-radius: 5px;
+  background-color: #6a1b9a;
+  color: #ffffff;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
 }
