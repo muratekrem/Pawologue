@@ -1,22 +1,20 @@
-// Rehome.js
-
-import React, { useState , useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../Navbar";
-import "./rehome.css"; // Import CSS file for styling
+import "./rehome.css"; // Stil için CSS dosyasını içe aktar
+import { getAuth } from "firebase/auth";
 
 const Rehome = ({ onSubmit }) => {
-  const [currentUser, setCurrentUser] = useState(null); // currentUser state'i tanımla
+  const [currentUser, setCurrentUser] = useState(null); // currentUser durumunu tanımla
+  const [submittedNotices, setSubmittedNotices] = useState([]); // Gönderilmiş ilanları saklamak için bir durum tanımla
 
   useEffect(() => {
     // localStorage'dan currentUser'ı al
     const storedCurrentUser = localStorage.getItem(`currentUser`);
     if (storedCurrentUser) {
       setCurrentUser(JSON.parse(storedCurrentUser));
-      console.log("123");
-      console.log(JSON.parse(storedCurrentUser)); // Güncel currentUser değerini göster
     }
-  }, []); // currentUser bağımlılık dizisine eklendi
-  console.log(currentUser);
+  }, []); // useEffect sadece ilk render sırasında çalışacak şekilde ayarlandı
+
   const [petInfo, setPetInfo] = useState({
     name: "",
     age: "",
@@ -25,16 +23,42 @@ const Rehome = ({ onSubmit }) => {
     photo: null,
     type: "",
     click: false,
-    submitDone: false // Added submitDone state
+    submitDone: false, // submitDone durumunu ekle
   });
 
   const [dogSelected, setDogSelected] = useState(false);
   const [catSelected, setCatSelected] = useState(false);
 
+  useEffect(() => {
+    // Gönderilen ilanları almak için Firebase Realtime Database'den veri çek
+    const fetchNotices = async () => {
+      try {
+        const response = await fetch("https://pawologue-default-rtdb.firebaseio.com/Notice.json");
+        if (!response.ok) {
+          throw new Error("Failed to fetch notices");
+        }
+        const data = await response.json();
+        const notices = [];
+        for (const key in data) {
+          const notice = {
+            id: key,
+            ...data[key]
+          };
+          notices.push(notice);
+        }
+        setSubmittedNotices(notices);
+      } catch (error) {
+        console.error("Error fetching notices:", error);
+      }
+    };
+
+    fetchNotices();
+  }, []); // useEffect sadece ilk render sırasında çalışacak şekilde ayarlandı
+
   const handleTypeSelection = (type) => {
     setPetInfo((prevState) => ({
       ...prevState,
-      type
+      type,
     }));
     if (type === "dog") {
       setDogSelected(true);
@@ -43,7 +67,7 @@ const Rehome = ({ onSubmit }) => {
       setCatSelected(true);
       setDogSelected(false);
     }
-    // Update click state based on form fields
+    // Form alanlarına bağlı olarak click durumunu güncelle
     setPetInfo((prevState) => ({
       ...prevState,
       click:
@@ -51,7 +75,7 @@ const Rehome = ({ onSubmit }) => {
         prevState.age !== "" &&
         prevState.breed !== "" &&
         prevState.location !== "" &&
-        type !== "" // Check if type is selected
+        prevState.type !== "", // type seçilmiş mi kontrol et
     }));
   };
 
@@ -65,7 +89,7 @@ const Rehome = ({ onSubmit }) => {
         prevState.age !== "" &&
         prevState.breed !== "" &&
         prevState.location !== "" &&
-        prevState.type !== "" // Check if type is selected
+        prevState.type !== "", // type seçilmiş mi kontrol et
     }));
   };
 
@@ -79,37 +103,77 @@ const Rehome = ({ onSubmit }) => {
         prevState.age !== "" &&
         prevState.breed !== "" &&
         prevState.location !== "" &&
-        prevState.type !== "" // Check if type is selected
+        prevState.type !== "", // type seçilmiş mi kontrol et
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Oluşturulan pet bilgilerini güncelle
     const updatedPetInfo = {
       ...petInfo,
-      createdBy: currentUser.name + " " + currentUser.surname
+      createdBy: currentUser.name, // Kullanıcı adını kullan
+      email: currentUser.email, // Kullanıcı e-posta adresini kullan
     };
-    onSubmit(updatedPetInfo);
-    console.log(updatedPetInfo);
-    setPetInfo((prevState) => ({
-      ...prevState,
-      submitDone: true
-    }));
-    // Reset form fields
-    setPetInfo({
-      name: "",
-      age: "",
-      breed: "",
-      location: "",
-      photo: null,
-      type: "",
-      click: false,
-      submitDone: false
-    });
-    setDogSelected(false);
-    setCatSelected(false);
 
-    
+    try {
+      // Firebase Realtime Database'e POST isteği gönder
+      const res = await fetch("https://pawologue-default-rtdb.firebaseio.com/Notice.json", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedPetInfo),
+      });
+      if (res.ok) {
+        console.log("Message sent to database");
+        // İşlem başarılı ise onSubmit fonksiyonunu çağırarak veriyi Adopt bileşenine aktar
+        onSubmit(updatedPetInfo);
+
+        setPetInfo((prevState) => ({
+          ...prevState,
+          photo :null ,
+          submitDone: true
+        }));
+        // Submit yapıldıktan sonra form alanlarını sıfırla
+        setPetInfo({
+          name: "",
+          age: "",
+          breed: "",
+          location: "",
+          photo: null,
+          type: "",
+          click: false,
+          submitDone: true,
+        });
+        console.log("Updated pet info:", petInfo); // Fotoğraf alanının sıfırlandığından emin olmak için petInfo durumunu kontrol et
+        setDogSelected(false);
+        setCatSelected(false);
+      } else {
+        console.log("Message didn't send. Error!");
+      }
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
+  };
+
+  const removeNotice = (id) => {
+    // Firebase Realtime Database'den ilanı kaldır
+    fetch(`https://pawologue-default-rtdb.firebaseio.com/Notice/${id}.json`, {
+      method: "DELETE",
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to delete notice");
+        }
+        // Başarılı ise güncellenmiş ilanlar listesini ayarla
+        const updatedNotices = submittedNotices.filter((notice) => notice.id !== id);
+        setSubmittedNotices(updatedNotices);
+      })
+      .catch((error) => {
+        console.error("Error deleting notice:", error);
+      });
   };
 
   return (
@@ -117,20 +181,20 @@ const Rehome = ({ onSubmit }) => {
       <Navbar />
       <div className="rehome-container">
         <h2>Rehome</h2>
-        <div style={{display:"flex", justifyContent:"center", marginBottom:"5px"}}>
+        <div style={{ display: "flex", justifyContent: "center", marginBottom: "5px" }}>
           <div>
-            <button 
-              type="button" 
-              disabled={dogSelected} 
+            <button
+              type="button"
+              disabled={dogSelected}
               onClick={() => handleTypeSelection("dog")}
             >
               The pet is a Dog
             </button>
           </div>
           <div>
-            <button 
-              type="button" 
-              disabled={catSelected} 
+            <button
+              type="button"
+              disabled={catSelected}
               onClick={() => handleTypeSelection("cat")}
             >
               The pet is a Cat
@@ -171,7 +235,17 @@ const Rehome = ({ onSubmit }) => {
           {petInfo.submitDone && <p>We hope the life lives in a home, submit is done.</p>}
         </form>
       </div>
-      <div>My Notices</div>
+      <div style={{ display: "flex", justifyContent: "center" }}>My Notices</div>
+      <div style={{ display: "flex", justifyContent: "space-around" }}>
+        {submittedNotices.map((notice, index) => (
+          <div key={index}>
+            <p>
+              {notice.name} - {notice.type}
+            </p>
+            <button onClick={() => removeNotice(notice.id)}>Remove</button>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
