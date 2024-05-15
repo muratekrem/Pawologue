@@ -73,6 +73,9 @@ function Navbar() {
       </Link>
       {auth.currentUser ? (
         <>
+        <Link to="/chat" style={styles.button}>
+            Chat
+          </Link>
           <Link to="/profile" style={styles.button}>
             Profile
           </Link>

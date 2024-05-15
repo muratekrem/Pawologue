@@ -109,6 +109,7 @@ function Profile() {
 const styles = {
   container: {
     padding: '20px',
+    
   },
   profileBox: {
     border: '1px solid #ccc',

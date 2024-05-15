@@ -1,15 +1,14 @@
-import { Link } from "react-router-dom"; // Link componentini import et
+import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import Navbar from "../Navbar";
-import { getDatabase, ref, get, child } from "firebase/database";
-import "./adopt.css";
+import { getDatabase, ref, get } from "firebase/database";
+import "./adopt.css"; // Adopt bileşeninin CSS dosyası
 
-const Adopt = () => {
+const Adopt = ( ) => {
   const [adoptedPets, setAdoptedPets] = useState([]);
-  const [currentUser, setCurrentUser] = useState(null); // Kullanıcı durumunu tanımla
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
-    // localStorage'dan currentUser'ı al
     const storedCurrentUser = localStorage.getItem(`currentUser`);
     if (storedCurrentUser) {
       setCurrentUser(JSON.parse(storedCurrentUser));
@@ -19,7 +18,7 @@ const Adopt = () => {
   useEffect(() => {
     const fetchAdoptedPets = async () => {
       const db = getDatabase();
-      const petRef = ref(db, 'Notice'); // Notice olarak varsayalım, bu database yolunu ilanlarınızın bulunduğu yola göre güncellemelisiniz
+      const petRef = ref(db, "Notice");
       try {
         const snapshot = await get(petRef);
         if (snapshot.exists()) {
@@ -27,7 +26,7 @@ const Adopt = () => {
           snapshot.forEach((childSnapshot) => {
             const pet = {
               id: childSnapshot.key,
-              ...childSnapshot.val()
+              ...childSnapshot.val(),
             };
             pets.push(pet);
           });
@@ -57,21 +56,38 @@ const Adopt = () => {
                   <div key={index} className="pet-card">
                     <div className="pet-content">
                       {pet.photo && (
-                        <img src={URL.createObjectURL(pet.photo)} alt="" width={170} height={170} />
+                        <img
+                          src={URL.createObjectURL(pet.photo)}
+                          alt=""
+                          width={170}
+                          height={170}
+                        />
                       )}
                       <div className="pet-details">
                         <div className="pet-info-text">Name: {pet.name}</div>
                         <div className="pet-info-text">Age: {pet.age}</div>
                         <div className="pet-info-text">Breed: {pet.breed}</div>
-                        <div className="pet-info-text">Location: {pet.location}</div>
-                        <div className="pet-info-text">Created By: {pet.createdBy}</div>
+                        <div className="pet-info-text">
+                          Location: {pet.location}
+                        </div>
+                        <div className="pet-info-text">
+                          Created By: {pet.createdBy}
+                        </div>
                         {/* Kullanıcı giriş yapmışsa ve ilan sahibi farklıysa, Start Conversation'a linkle */}
-                {currentUser && pet.createdBy !== currentUser.name ? (
-                  <Link to="/chat" className="button">Start Conversation</Link>
-                ) : (
-                  // Kullanıcı giriş yapmamışsa veya ilan sahibi kendisiyse, linki devre dışı bırak
-                  <button disabled className="button">Start Conversation</button>
-                )}
+                        {currentUser &&
+                        currentUser.name &&
+                        pet.createdBy !== currentUser.name ? (
+                          <Link
+                            to={`/chat/${pet.createdBy}`}
+                            className="button"
+                          >
+                            Start Conversation
+                          </Link>
+                        ) : (
+                          <button disabled className="button">
+                            Start Conversation
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -91,21 +107,38 @@ const Adopt = () => {
                   <div key={index} className="pet-card">
                     <div className="pet-content">
                       {pet.photo && (
-                        <img src={URL.createObjectURL(pet.photo)} alt="" width={170} height={170} />
+                        <img
+                          src={URL.createObjectURL(pet.photo)}
+                          alt=""
+                          width={170}
+                          height={170}
+                        />
                       )}
                       <div className="pet-details">
                         <div className="pet-info-text">Name: {pet.name}</div>
                         <div className="pet-info-text">Age: {pet.age}</div>
                         <div className="pet-info-text">Breed: {pet.breed}</div>
-                        <div className="pet-info-text">Location: {pet.location}</div>
-                        <div className="pet-info-text">Created By: {pet.createdBy}</div>
+                        <div className="pet-info-text">
+                          Location: {pet.location}
+                        </div>
+                        <div className="pet-info-text">
+                          Created By: {pet.createdBy}
+                        </div>
                         {/* Kullanıcı giriş yapmışsa ve ilan sahibi farklıysa, Start Conversation'a linkle */}
-                {currentUser && pet.createdBy !== currentUser.name ? (
-                  <Link to="/chat" className="button">Start Conversation</Link>
-                ) : (
-                  // Kullanıcı giriş yapmamışsa veya ilan sahibi kendisiyse, linki devre dışı bırak
-                  <button disabled className="button">Start Conversation</button>
-                )}
+                        {currentUser &&
+                        currentUser.name &&
+                        pet.createdBy !== currentUser.name ? (
+                          <Link
+                            to={`/chat/${pet.createdBy}`}
+                            className="button"
+                          >
+                            Start Conversation
+                          </Link>
+                        ) : (
+                          <button disabled className="button">
+                            Start Conversation
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>
