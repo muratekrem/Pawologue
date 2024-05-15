@@ -1,12 +1,47 @@
-import React from "react";
 import { Link } from "react-router-dom"; // Link componentini import et
+import React, { useState, useEffect } from "react";
 import Navbar from "../Navbar";
+import { getDatabase, ref, get, child } from "firebase/database";
 import "./adopt.css";
 
-const Adopt = ({ adoptedPets, createdBy }) => {
-  // Check if all adopted pets are dogs or cats
-  const allDogs = adoptedPets.every((pet) => pet.type === "dog");
-  const allCats = adoptedPets.every((pet) => pet.type === "cat");
+const Adopt = () => {
+  const [adoptedPets, setAdoptedPets] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null); // Kullanıcı durumunu tanımla
+
+  useEffect(() => {
+    // localStorage'dan currentUser'ı al
+    const storedCurrentUser = localStorage.getItem(`currentUser`);
+    if (storedCurrentUser) {
+      setCurrentUser(JSON.parse(storedCurrentUser));
+    }
+  }, []);
+
+  useEffect(() => {
+    const fetchAdoptedPets = async () => {
+      const db = getDatabase();
+      const petRef = ref(db, 'Notice'); // Notice olarak varsayalım, bu database yolunu ilanlarınızın bulunduğu yola göre güncellemelisiniz
+      try {
+        const snapshot = await get(petRef);
+        if (snapshot.exists()) {
+          const pets = [];
+          snapshot.forEach((childSnapshot) => {
+            const pet = {
+              id: childSnapshot.key,
+              ...childSnapshot.val()
+            };
+            pets.push(pet);
+          });
+          setAdoptedPets(pets);
+        } else {
+          console.log("No data available");
+        }
+      } catch (error) {
+        console.error("Error fetching adopted pets:", error);
+      }
+    };
+
+    fetchAdoptedPets();
+  }, []);
 
   return (
     <div>
@@ -30,7 +65,13 @@ const Adopt = ({ adoptedPets, createdBy }) => {
                         <div className="pet-info-text">Breed: {pet.breed}</div>
                         <div className="pet-info-text">Location: {pet.location}</div>
                         <div className="pet-info-text">Created By: {pet.createdBy}</div>
-                        <Link to="/chat" className="button">Start Conversation</Link>
+                        {/* Kullanıcı giriş yapmışsa ve ilan sahibi farklıysa, Start Conversation'a linkle */}
+                {currentUser && pet.createdBy !== currentUser.name ? (
+                  <Link to="/chat" className="button">Start Conversation</Link>
+                ) : (
+                  // Kullanıcı giriş yapmamışsa veya ilan sahibi kendisiyse, linki devre dışı bırak
+                  <button disabled className="button">Start Conversation</button>
+                )}
                       </div>
                     </div>
                   </div>
@@ -58,7 +99,13 @@ const Adopt = ({ adoptedPets, createdBy }) => {
                         <div className="pet-info-text">Breed: {pet.breed}</div>
                         <div className="pet-info-text">Location: {pet.location}</div>
                         <div className="pet-info-text">Created By: {pet.createdBy}</div>
-                        <Link to="/chat" className="button">Start Conversation</Link>
+                        {/* Kullanıcı giriş yapmışsa ve ilan sahibi farklıysa, Start Conversation'a linkle */}
+                {currentUser && pet.createdBy !== currentUser.name ? (
+                  <Link to="/chat" className="button">Start Conversation</Link>
+                ) : (
+                  // Kullanıcı giriş yapmamışsa veya ilan sahibi kendisiyse, linki devre dışı bırak
+                  <button disabled className="button">Start Conversation</button>
+                )}
                       </div>
                     </div>
                   </div>

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom'; // useNavigate hook'u ekledik
-import io from 'socket.io-client'; // Import Socket.io client
+// import io from 'socket.io-client'; // Import Socket.io client
 
-const socket = io('http://localhost:3001'); // Connect to the server
+// const socket = io('http://localhost:3001'); // Connect to the server
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -30,8 +30,8 @@ function Login() {
       await signInWithEmailAndPassword(auth, formData.email, formData.password);
       console.log('User logged in successfully!');
       console.log(formData.email);
-      socket.emit('user_login', { email: formData.email });
-      // Giriş başarılı olduğunda yapılacak işlemler buraya eklenir
+      // socket.emit('user_login', { email: formData.email });
+      
       navigate('/profile', { state: { email: formData.email } }); // Profil sayfasına yönlendirme ve e-postayı ilete
     } catch (error) {
       setError(error.message);

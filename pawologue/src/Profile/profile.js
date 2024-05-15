@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import io from 'socket.io-client'; // Import Socket.io client
+// import io from 'socket.io-client'; 
 import Navbar from "../Navbar";
 
-const socket = io('http://localhost:3001'); // Connect to the server
+// const socket = io('http://localhost:3001'); // Connect to the server
 
 function Profile() {
   const [userData, setUserData] = useState([]);
@@ -63,7 +63,7 @@ function Profile() {
 
       // Emit currentUser data to the server
       console.log(currentUser);
-      socket.emit('current_user', foundUser); // Sending currentUser data to the server
+      // socket.emit('current_user', foundUser);
     }
   }, [location.state, userData, loading]);
 

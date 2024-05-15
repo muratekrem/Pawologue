@@ -2,10 +2,13 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../Navbar";
 import "./rehome.css"; // Stil için CSS dosyasını içe aktar
 import { getAuth } from "firebase/auth";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+
 
 const Rehome = ({ onSubmit }) => {
   const [currentUser, setCurrentUser] = useState(null); // currentUser durumunu tanımla
   const [submittedNotices, setSubmittedNotices] = useState([]); // Gönderilmiş ilanları saklamak için bir durum tanımla
+  const storage = getStorage();
 
   useEffect(() => {
     // localStorage'dan currentUser'ı al
@@ -44,6 +47,10 @@ const Rehome = ({ onSubmit }) => {
             id: key,
             ...data[key]
           };
+          // Kullanıcı giriş yapmış ve ilan sahibi kendisi değilse, ilanları gösterme
+          if (!currentUser || notice.createdBy !== currentUser.name) {
+            continue;
+          }
           notices.push(notice);
         }
         setSubmittedNotices(notices);
@@ -53,7 +60,7 @@ const Rehome = ({ onSubmit }) => {
     };
 
     fetchNotices();
-  }, []); // useEffect sadece ilk render sırasında çalışacak şekilde ayarlandı
+  }, [currentUser]); // useEffect sadece ilk render sırasında çalışacak şekilde ayarlandı
 
   const handleTypeSelection = (type) => {
     setPetInfo((prevState) => ({
@@ -75,7 +82,8 @@ const Rehome = ({ onSubmit }) => {
         prevState.age !== "" &&
         prevState.breed !== "" &&
         prevState.location !== "" &&
-        prevState.type !== "", // type seçilmiş mi kontrol et
+        prevState.type !== ""&&
+        prevState.photo !== "", 
     }));
   };
 
@@ -89,7 +97,8 @@ const Rehome = ({ onSubmit }) => {
         prevState.age !== "" &&
         prevState.breed !== "" &&
         prevState.location !== "" &&
-        prevState.type !== "", // type seçilmiş mi kontrol et
+        prevState.type !== "" &&
+        prevState.photo !== "",
     }));
   };
 
@@ -103,60 +112,88 @@ const Rehome = ({ onSubmit }) => {
         prevState.age !== "" &&
         prevState.breed !== "" &&
         prevState.location !== "" &&
-        prevState.type !== "", // type seçilmiş mi kontrol et
+        prevState.type !== "" &&
+        prevState.photo !== "",
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     // Oluşturulan pet bilgilerini güncelle
     const updatedPetInfo = {
       ...petInfo,
       createdBy: currentUser.name, // Kullanıcı adını kullan
       email: currentUser.email, // Kullanıcı e-posta adresini kullan
     };
-
+  
     try {
-      // Firebase Realtime Database'e POST isteği gönder
-      const res = await fetch("https://pawologue-default-rtdb.firebaseio.com/Notice.json", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedPetInfo),
-      });
-      if (res.ok) {
-        console.log("Message sent to database");
-        // İşlem başarılı ise onSubmit fonksiyonunu çağırarak veriyi Adopt bileşenine aktar
-        onSubmit(updatedPetInfo);
-
-        setPetInfo((prevState) => ({
-          ...prevState,
-          photo :null ,
-          submitDone: true
-        }));
-        // Submit yapıldıktan sonra form alanlarını sıfırla
-        setPetInfo({
-          name: "",
-          age: "",
-          breed: "",
-          location: "",
-          photo: null,
-          type: "",
-          click: false,
-          submitDone: true,
-        });
-        console.log("Updated pet info:", petInfo); // Fotoğraf alanının sıfırlandığından emin olmak için petInfo durumunu kontrol et
-        setDogSelected(false);
-        setCatSelected(false);
-      } else {
-        console.log("Message didn't send. Error!");
-      }
+      // Firebase Storage'a dosyayı yükle
+      const storageRef = ref(storage, 'photos/' + petInfo.photo.name);
+      const uploadTask = uploadBytesResumable(storageRef, petInfo.photo);
+  
+      // Yükleme tamamlandığında işlem yap
+      uploadTask.on('state_changed', 
+        (snapshot) => {
+          // Yükleme sırasında durumu takip et
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log('Upload is ' + progress + '% done');
+        }, 
+        (error) => {
+          // Hata durumunda işlem yap
+          console.error('Error uploading file', error);
+        }, 
+        () => {
+          // Yükleme tamamlandığında işlem yap
+          console.log('File uploaded successfully');
+          
+          // Dosyanın indirme URL'sini al
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            console.log('File available at', downloadURL);
+            // Dosyanın URL'sini güncellenmiş pet bilgilerine ekle
+            updatedPetInfo.photoURL = downloadURL;
+  
+            // Firebase Realtime Database'e POST isteği gönder
+            fetch("https://pawologue-default-rtdb.firebaseio.com/Notice.json", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(updatedPetInfo),
+            })
+              .then((res) => {
+                if (res.ok) {
+                  console.log("Message sent to database");
+                  // İşlem başarılı ise onSubmit fonksiyonunu çağırarak veriyi Adopt bileşenine aktar
+                  onSubmit(updatedPetInfo);
+                  // Submit yapıldıktan sonra form alanlarını sıfırla
+                  setPetInfo({
+                    name: "",
+                    age: "",
+                    breed: "",
+                    location: "",
+                    photo: null,
+                    type: "",
+                    click: false,
+                    submitDone: true,
+                  });
+                  setDogSelected(false);
+                  setCatSelected(false);
+                } else {
+                  console.log("Message didn't send. Error!");
+                }
+              })
+              .catch((error) => {
+                console.error("Error sending message:", error);
+              });
+          });
+        }
+      );
     } catch (error) {
-      console.error("Error sending message:", error);
+      console.error("Error uploading file:", error);
     }
   };
+  
 
   const removeNotice = (id) => {
     // Firebase Realtime Database'den ilanı kaldır
@@ -231,10 +268,11 @@ const Rehome = ({ onSubmit }) => {
             onChange={handleChange}
           />
           <input type="file" name="photo" onChange={handlePhotoChange} />
-          <button type="submit" disabled={!petInfo.click}>Submit</button>
+          <button type="submit" disabled={!petInfo.click || !petInfo.photo || !currentUser}>Submit</button>
           {petInfo.submitDone && <p>We hope the life lives in a home, submit is done.</p>}
         </form>
       </div>
+      
       <div style={{ display: "flex", justifyContent: "center" }}>My Notices</div>
       <div style={{ display: "flex", justifyContent: "space-around" }}>
         {submittedNotices.map((notice, index) => (
@@ -245,8 +283,9 @@ const Rehome = ({ onSubmit }) => {
             <button onClick={() => removeNotice(notice.id)}>Remove</button>
           </div>
         ))}
+        </div>
       </div>
-    </div>
+    
   );
 };
 
