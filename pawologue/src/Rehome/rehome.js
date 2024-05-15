@@ -218,7 +218,7 @@ const Rehome = ({ onSubmit }) => {
       <Navbar />
       <div className="rehome-container">
         <h2>Rehome</h2>
-        <div style={{ display: "flex", justifyContent: "center", marginBottom: "5px" }}>
+        <div style={{ display: "flex", justifyContent: "space-around", marginBottom: "20px" }}>
           <div>
             <button
               type="button"
