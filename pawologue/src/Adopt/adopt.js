@@ -1,12 +1,13 @@
-import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import Navbar from "../Navbar";
 import { getDatabase, ref, get } from "firebase/database";
-import "./adopt.css"; // Adopt bileşeninin CSS dosyası
+import { Link } from "react-router-dom";
+import "./adopt.css";
 
-const Adopt = ( ) => {
+const Adopt = () => {
   const [adoptedPets, setAdoptedPets] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
+  const [selectedUser, setSelectedUser] = useState(null);
 
   useEffect(() => {
     const storedCurrentUser = localStorage.getItem(`currentUser`);
@@ -42,6 +43,25 @@ const Adopt = ( ) => {
     fetchAdoptedPets();
   }, []);
 
+  const handleStartConversation = async (selectedUser) => {
+    try {
+      await fetch("https://pawologue-default-rtdb.firebaseio.com/Messaging.json", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          currentUser: currentUser.name,
+          selectedUser: selectedUser,
+          messages: []
+        }),
+      });
+      console.log("Messaging data sent to database");
+    } catch (error) {
+      console.error("Error sending messaging data:", error);
+    }
+  };
+
   return (
     <div>
       <Navbar />
@@ -73,13 +93,13 @@ const Adopt = ( ) => {
                         <div className="pet-info-text">
                           Created By: {pet.createdBy}
                         </div>
-                        {/* Kullanıcı giriş yapmışsa ve ilan sahibi farklıysa, Start Conversation'a linkle */}
                         {currentUser &&
                         currentUser.name &&
                         pet.createdBy !== currentUser.name ? (
                           <Link
-                            to={`/chat/${pet.createdBy}`}
+                            to="/chat"
                             className="button"
+                            onClick={() => handleStartConversation(pet.createdBy)}
                           >
                             Start Conversation
                           </Link>
@@ -124,13 +144,13 @@ const Adopt = ( ) => {
                         <div className="pet-info-text">
                           Created By: {pet.createdBy}
                         </div>
-                        {/* Kullanıcı giriş yapmışsa ve ilan sahibi farklıysa, Start Conversation'a linkle */}
                         {currentUser &&
                         currentUser.name &&
                         pet.createdBy !== currentUser.name ? (
                           <Link
-                            to={`/chat/${pet.createdBy}`}
+                            to="/chat"
                             className="button"
+                            onClick={() => handleStartConversation(pet.createdBy)}
                           >
                             Start Conversation
                           </Link>

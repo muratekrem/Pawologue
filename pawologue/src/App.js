@@ -14,11 +14,11 @@ import Chat from "./Chat/chat";
 function App() {
   const [adoptedPets, setAdoptedPets] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
-  const [createdBy, setCreatedBy] = useState(null); 
+  const [createdBy, setCreatedBy] = useState(null);
 
-  // Tıklanan ilana ait kullanıcı bilgisini alacak işlev
   const handleAdopt = (createdBy) => {
     setCreatedBy(createdBy);
+    console.log(createdBy);
   };
 
   return (
@@ -30,15 +30,13 @@ function App() {
             <Route path="/homepage" element={<Homepage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/rehome" element={<Rehome currentUser={currentUser} onSubmit={handleAdopt} />} />
-            {/* Adopt bileşenine handleAdopt işlevini prop olarak geçir */}
-            <Route path="/adopt" element={<Adopt adoptedPets={adoptedPets} onStartConversation={handleAdopt} />} /> 
+            <Route path="/adopt" element={<Adopt adoptedPets={adoptedPets} onStartConversation={handleAdopt} />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/mapcomponent" element={<MapComponent />} />
             <Route path="/pairing" element={<Pairing />} />
             <Route path="/petSitting" element={<PetSitting />} />
             <Route path="/profile" element={<Profile />} />
-            {/* Chat bileşenine createdBy bilgisini prop olarak geçir */}
-            <Route path="/chat" element={<Chat createdBy={createdBy} />} />
+            <Route path="/chat" element={<Chat createdBy={createdBy} currentUser={currentUser} />} />
           </Routes>
         </div>
       </Router>
