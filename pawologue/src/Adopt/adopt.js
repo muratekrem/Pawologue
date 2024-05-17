@@ -7,7 +7,6 @@ import "./adopt.css";
 const Adopt = () => {
   const [adoptedPets, setAdoptedPets] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
-  const [selectedUser, setSelectedUser] = useState(null);
 
   useEffect(() => {
     const storedCurrentUser = localStorage.getItem(`currentUser`);
@@ -45,7 +44,7 @@ const Adopt = () => {
 
   const handleStartConversation = async (selectedUser) => {
     try {
-      await fetch("https://pawologue-default-rtdb.firebaseio.com/Messaging.json", {
+      const response = await fetch("https://pawologue-default-rtdb.firebaseio.com/Messaging.json", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -56,7 +55,11 @@ const Adopt = () => {
           messages: []
         }),
       });
-      console.log("Messaging data sent to database");
+      if (response.ok) {
+        console.log("Messaging data sent to database");
+      } else {
+        console.error("Error sending messaging data:", response.statusText);
+      }
     } catch (error) {
       console.error("Error sending messaging data:", error);
     }
