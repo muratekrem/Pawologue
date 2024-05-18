@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { getDatabase, ref, onValue, push, child, update } from 'firebase/database';
+import { getDatabase, ref, onValue, push } from 'firebase/database';
 import Navbar from '../Navbar';
 
 function Chat() {
@@ -24,27 +24,24 @@ function Chat() {
   }, []);
 
   useEffect(() => {
-    if (!currentUser) {
-      console.log('No currentUser yet, returning');
-      return; // currentUser null ise, işlemi durdur
-    }
+    if (!currentUser) return;
 
-    console.log('Setting up chat reference');
-    const chatRef = ref(database, 'conversations');
+    console.log('Fetching conversations');
+    const chatRef = ref(database, 'Messaging');
     const unsubscribe = onValue(chatRef, (snapshot) => {
       const data = snapshot.val();
-      console.log('Data snapshot:', data);
       if (data) {
-        // currentUser is either currentUser or selectedUser in any conversation
-        const userConversations = Object.keys(data).filter(key =>
-          key.includes(currentUser.name)
-        );
-
-        const partners = userConversations.map(key => 
-          key.split('_').find(name => name !== currentUser.name)
-        );
-
-        setConversationPartners(partners);
+        const partners = new Set();
+        Object.keys(data).forEach(key => {
+          const conversation = data[key];
+          if (conversation.currentUser === currentUser.name) {
+            partners.add(conversation.selectedUser);
+          }
+          if (conversation.selectedUser === currentUser.name) {
+            partners.add(conversation.currentUser);
+          }
+        });
+        setConversationPartners([...partners]);
       } else {
         console.log('No data found in Messaging');
       }
@@ -83,7 +80,7 @@ function Chat() {
     }
   };
 
-  const fetchMessages = async (partner) => {
+  const fetchMessages = (partner) => {
     setActivePartner(partner);
     const conversationKey = [currentUser.name, partner].sort().join('_');
     const conversationRef = ref(database, `conversations/${conversationKey}/messages`);
@@ -99,10 +96,11 @@ function Chat() {
   };
 
   const handleStartConversation = (partner) => {
+    setActivePartner(partner);
+    fetchMessages(partner);
     if (!conversationPartners.includes(partner)) {
       setConversationPartners([...conversationPartners, partner]);
     }
-    fetchMessages(partner);
   };
 
   useEffect(() => {
@@ -117,7 +115,7 @@ function Chat() {
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '89vh' }}>
         <div style={{ display: 'flex', width: '98%', justifyContent: 'center' }}>
           <div style={{ width: '10%', border: '1px solid #ccc', borderRadius: '5px', marginRight: '10px' }}>
-          {conversationPartners.map((partner) => (
+            {conversationPartners.map((partner) => (
               <h3 key={partner} style={{ border: 'groove', cursor: 'pointer' }} onClick={() => handleStartConversation(partner)}>
                 {partner}
               </h3>
@@ -183,4 +181,3 @@ function Chat() {
 }
 
 export default Chat;
-
