@@ -1,14 +1,15 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { getDatabase, ref, onValue, push } from 'firebase/database';
+import { getDatabase, ref, onValue, push, child, update } from 'firebase/database';
 import Navbar from '../Navbar';
 
 function Chat() {
   const { userId } = useParams();
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
-  const [conversationPartner, setConversationPartner] = useState('');
+  const [conversationPartners, setConversationPartners] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
+  const [activePartner, setActivePartner] = useState(null);
   const database = getDatabase();
   const messagesEndRef = useRef(null);
 
@@ -29,26 +30,21 @@ function Chat() {
     }
 
     console.log('Setting up chat reference');
-    const chatRef = ref(database, 'Messaging');
+    const chatRef = ref(database, 'conversations');
     const unsubscribe = onValue(chatRef, (snapshot) => {
       const data = snapshot.val();
       console.log('Data snapshot:', data);
       if (data) {
-        // Doğru conversation partner'i bulmak için currentUser ve selectedUser ile eşleşen veriyi bul
-        const userConversation = Object.values(data).find(conversation => 
-          (conversation.currentUser === currentUser.name && conversation.selectedUser === userId) ||
-          (conversation.currentUser === userId && conversation.selectedUser === currentUser.name)
+        // currentUser is either currentUser or selectedUser in any conversation
+        const userConversations = Object.keys(data).filter(key =>
+          key.includes(currentUser.name)
         );
-        
-        if (userConversation) {
-          console.log('User conversation found:', userConversation);
-          setConversationPartner(userConversation.selectedUser === currentUser.name ? userConversation.currentUser : userConversation.selectedUser);
-          console.log('Conversation partner set to:', userConversation.selectedUser === currentUser.name ? userConversation.currentUser : userConversation.selectedUser);
-          setMessages(userConversation.messages || []);
-          console.log('Messages set:', userConversation.messages);
-        } else {
-          console.log('No matching conversation found');
-        }
+
+        const partners = userConversations.map(key => 
+          key.split('_').find(name => name !== currentUser.name)
+        );
+
+        setConversationPartners(partners);
       } else {
         console.log('No data found in Messaging');
       }
@@ -57,44 +53,7 @@ function Chat() {
     return () => {
       unsubscribe();
     };
-  }, [database, currentUser, userId]);
-
-  useEffect(() => {
-    if (!currentUser) return;
-
-    const fetchMessages = async () => {
-      try {
-        const response = await fetch(`https://pawologue-default-rtdb.firebaseio.com/Messaging.json`);
-        if (response.ok) {
-          const data = await response.json();
-          if (data) {
-            const userConversation = Object.values(data).find(conversation => 
-              conversation.currentUser === currentUser.name
-            );
-
-            if (userConversation) {
-              console.log('User conversation found:', userConversation);
-              console.log('Selected user:', userConversation.selectedUser);
-              setConversationPartner(userConversation.selectedUser);
-              console.log('Conversation partner set to:', userConversation.selectedUser);
-              setMessages(userConversation.messages || []);
-              console.log('Messages set:', userConversation.messages);
-            } else {
-              console.log('No matching conversation found');
-            }
-          } else {
-            console.log('No data found in Messaging');
-          }
-        } else {
-          console.error('Error fetching messages:', response.statusText);
-        }
-      } catch (error) {
-        console.error('Error fetching messages:', error);
-      }
-    };
-
-    fetchMessages();
-  }, [currentUser]);
+  }, [database, currentUser]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -103,7 +62,7 @@ function Chat() {
   useEffect(scrollToBottom, [messages]);
 
   const sendMessage = async () => {
-    if (!newMessage.trim() || !currentUser) {
+    if (!newMessage.trim() || !currentUser || !activePartner) {
       return;
     }
 
@@ -113,50 +72,44 @@ function Chat() {
       timestamp: new Date().toISOString(),
     };
 
+    const conversationKey = [currentUser.name, activePartner].sort().join('_');
+    const conversationRef = ref(database, `conversations/${conversationKey}/messages`);
+
     try {
-      const chatRef = ref(database, 'Messaging');
-      await push(chatRef, messageData);
+      await push(conversationRef, messageData);
       setNewMessage('');
     } catch (error) {
       console.error('Error sending message:', error);
     }
   };
 
-  const handleStartConversation = async (selectedUser) => {
-    try {
-      const response = await fetch("https://pawologue-default-rtdb.firebaseio.com/Messaging.json", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        }
-      });
-      if (response.ok) {
-        const data = await response.json();
-        if (data) {
-          const userConversation = Object.values(data).find(conversation => 
-            conversation.currentUser === currentUser.name &&
-            conversation.selectedUser === selectedUser
-          );
+  const fetchMessages = async (partner) => {
+    setActivePartner(partner);
+    const conversationKey = [currentUser.name, partner].sort().join('_');
+    const conversationRef = ref(database, `conversations/${conversationKey}/messages`);
 
-          if (userConversation) {
-            console.log('User conversation found:', userConversation);
-            setConversationPartner(selectedUser);
-            console.log('Conversation partner set to:', selectedUser);
-            setMessages(userConversation.messages || []);
-            console.log('Messages set:', userConversation.messages);
-          } else {
-            console.log('No matching conversation found');
-          }
-        } else {
-          console.log('No data found in Messaging');
-        }
+    onValue(conversationRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        setMessages(Object.values(data));
       } else {
-        console.error("Error fetching messaging data:", response.statusText);
+        setMessages([]);
       }
-    } catch (error) {
-      console.error("Error fetching messaging data:", error);
-    }
+    });
   };
+
+  const handleStartConversation = (partner) => {
+    if (!conversationPartners.includes(partner)) {
+      setConversationPartners([...conversationPartners, partner]);
+    }
+    fetchMessages(partner);
+  };
+
+  useEffect(() => {
+    if (userId && currentUser) {
+      handleStartConversation(userId);
+    }
+  }, [userId, currentUser]);
 
   return (
     <div>
@@ -164,7 +117,11 @@ function Chat() {
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '89vh' }}>
         <div style={{ display: 'flex', width: '98%', justifyContent: 'center' }}>
           <div style={{ width: '10%', border: '1px solid #ccc', borderRadius: '5px', marginRight: '10px' }}>
-            <h3>{conversationPartner}</h3>
+          {conversationPartners.map((partner) => (
+              <h3 key={partner} style={{ border: 'groove', cursor: 'pointer' }} onClick={() => handleStartConversation(partner)}>
+                {partner}
+              </h3>
+            ))}
           </div>
           <div style={{ width: '80%', display: 'flex', flexDirection: 'column' }}>
             <div
@@ -185,7 +142,7 @@ function Chat() {
                     textAlign: message.sender === currentUser.name ? 'right' : 'left',
                   }}
                 >
-                  <strong>{message.sender === currentUser.name ? 'You' : conversationPartner}:</strong> {message.text}
+                  <strong>{message.sender === currentUser.name ? 'You' : message.sender}:</strong> {message.text}
                 </div>
               ))}
               <div ref={messagesEndRef}></div>
@@ -226,3 +183,4 @@ function Chat() {
 }
 
 export default Chat;
+
