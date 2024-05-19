@@ -129,7 +129,7 @@ const Adopt = () => {
                 return (
                   <div key={index} className="pet-card">
                     <div className="pet-content">
-                      {pet.photo && (
+                    {pet.photoURL && (
                         <img
                           src={pet.photoURL}
                           alt=""
