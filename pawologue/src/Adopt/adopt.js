@@ -131,7 +131,7 @@ const Adopt = () => {
                     <div className="pet-content">
                       {pet.photo && (
                         <img
-                          src={URL.createObjectURL(pet.photo)}
+                          src={pet.photoURL}
                           alt=""
                           width={170}
                           height={170}
