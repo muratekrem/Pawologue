@@ -10,6 +10,7 @@ import Rehome from "./Rehome/rehome";
 import Homepage from "./Homepage/homepage";
 import Profile from "./Profile/profile";
 import Chat from "./Chat/chat";
+import DogNotices from "./PetSitting/DogNotices";
 
 function App() {
   const [adoptedPets, setAdoptedPets] = useState([]);
@@ -37,6 +38,7 @@ function App() {
             <Route path="/petSitting" element={<PetSitting />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/chat" element={<Chat createdBy={createdBy} currentUser={currentUser} />} />
+            <Route path="/dognotices" element={<DogNotices />} />
           </Routes>
         </div>
       </Router>

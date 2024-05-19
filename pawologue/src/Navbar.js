@@ -65,7 +65,7 @@ function Navbar() {
       <Link to="/pairing" style={styles.button}>
         Find a Partner
       </Link>
-      <Link to="/petSitting" style={styles.button}>
+      <Link to="/dognotices" style={styles.button}>
         Pet Sitting
       </Link>
       <Link to="/mapcomponent" style={styles.button}>
