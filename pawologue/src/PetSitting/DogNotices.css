@@ -33,8 +33,8 @@
   }
   
   .pet-card {
-    width: calc(33%); /* İki ilanı yan yana sığdırmak için %50 genişlik, kenar boşluğunu da düşünerek 10px çıkarıyoruz */
-    margin-bottom: 20px; /* İlanlar arasında boşluk bırak */
+    width: calc(13%); /* İki ilanı yan yana sığdırmak için %50 genişlik, kenar boşluğunu da düşünerek 10px çıkarıyoruz */
+   /* İlanlar arasında boşluk bırak */
     padding: 10px;
     border: 3px solid #ccc; /* Border ekleme */
   }
