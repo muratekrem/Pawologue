@@ -25,7 +25,7 @@ const PetMatchForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('localhost:3000', {
+            const response = await axios.post('http://localhost:5001/pairing', {
                 features: Object.values(features)
             });
             setResult(response.data.indices);
