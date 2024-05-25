@@ -46,7 +46,6 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  align-items: center;
 }
 
 .pet-card img {
@@ -74,10 +73,7 @@ p {
 /* Medium ekranlar için */
 @media (min-width: 768px) {
   .column {
-    width: 46%;
-    margin-left: 5px;
-    margin-right: 5px;
-    justify-content: center;
+    width: 48%;
   }
 
   .divider {
@@ -101,6 +97,6 @@ p {
   }
 
   .pet-card {
-    width: calc(45% - 20px);
+    width: calc(48% - 20px);
   }
 }
