@@ -27,7 +27,7 @@ const Pairing = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:5001/pairing', {  // Doğru URL'yi burada kullandım
+            const response = await axios.post('http://localhost:5001/pairing', {  
                 features: Object.values(features)
             });
             setResult(response.data.indices);
