@@ -1,53 +1,61 @@
-/* adopt.css */
+/* Genel stiller */
 .pet-content {
   padding: 10px;
-  margin: 0 5px; /* İçeriği sarmalayan boşluk */
-
+  margin: 0 5px;
+  height: auto;
 }
 
 .pet-details {
   display: flex;
-  flex-direction: column; /* Metin içeriğini dikey olarak sıralama */
-  align-items: center; /* İçeriği yatayda ortala */
+  flex-direction: column;
+  align-items: center;
 }
 
 .pet-container {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
-.pet-info-text{
+
+.pet-info-text {
   display: flex;
   justify-content: center;
   width: 100%;
-  
 }
+
 .column {
-  width: 100%; 
+  width: 100%;
 }
 
 .divider {
-  height: 100%;
-  margin: 0 10px;
+  height: 1px;
+  width: 80%;
+  background-color: #ccc;
+  margin: 20px 0;
 }
 
 .pet-card {
-  width: calc(32% - 30px); /* İki ilanı yan yana sığdırmak için %50 genişlik, kenar boşluğunu da düşünerek 10px çıkarıyoruz */
-  margin-bottom: 20px; /* İlanlar arasında boşluk bırak */
+  width: 100%;
+  max-width: 320px;
+  margin-bottom: 20px;
   padding: 10px;
-  border: 3px solid #ccc; /* Border ekleme */
+  border: 3px solid #ccc;
 }
+
 .pet-card-wrapper {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around; /* İlan kartlarını eşit şekilde dağıt */
+  justify-content: center;
+  align-items: center;
 }
 
 .pet-card img {
-  max-width: 100%;
   height: auto;
   display: block;
   margin: 0 auto;
 }
-p{
+
+p {
   display: flex;
   justify-content: center;
 }
@@ -61,4 +69,35 @@ p{
   border: none;
   cursor: pointer;
   margin-top: 10px;
+}
+
+/* Medium ekranlar için */
+@media (min-width: 768px) {
+  .column {
+    width: 48%;
+  }
+
+  .divider {
+    display: block;
+    height: auto;
+    width: 2px;
+    background-color: #ccc;
+    margin: 0 20px;
+  }
+
+  .pet-card {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+/* Large ekranlar için */
+@media (min-width: 1024px) {
+  .pet-card-wrapper {
+    justify-content: space-between;
+  }
+
+  .pet-card {
+    width: calc(45% - 20px);
+  }
 }
