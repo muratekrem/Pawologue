@@ -97,6 +97,7 @@ p {
   }
 
   .pet-card {
-    width: calc(48% - 20px);
+    margin: 10px;
+    width: calc(45% - 20px);
   }
 }
