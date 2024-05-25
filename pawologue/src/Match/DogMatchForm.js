@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import Navbar from '../Navbar';
+import "./pairing.css"
 
 const PetMatchForm = () => {
     const [features, setFeatures] = useState({
@@ -25,7 +27,7 @@ const PetMatchForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:5001/pairing', {
+            const response = await axios.post('http://localhost:5001/pairing', {  // Doğru URL'yi burada kullandım
                 features: Object.values(features)
             });
             setResult(response.data.indices);
@@ -35,6 +37,11 @@ const PetMatchForm = () => {
     };
 
     return (
+        <div>
+            <Navbar></Navbar>
+            <div className='ayar'>
+
+            
         <div className="container">
             <h1>Find Your Dog Match</h1>
             <form id="pet-form" onSubmit={handleSubmit}>
@@ -199,7 +206,9 @@ const PetMatchForm = () => {
                 </div>
             )}
         </div>
+        </div>
+        </div>
     );
 };
 
-export default PetMatchForm;
+export default PetMatchForm;

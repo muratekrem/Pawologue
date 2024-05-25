@@ -3,7 +3,7 @@ import axios from 'axios';
 import Navbar from '../Navbar';
 import "./pairing.css"
 
-const PetMatchForm = () => {
+const Pairing = () => {
     const [features, setFeatures] = useState({
         feature1: '000001',
         feature2: '0001',
@@ -211,4 +211,4 @@ const PetMatchForm = () => {
     );
 };
 
-export default PetMatchForm;
+export default Pairing;

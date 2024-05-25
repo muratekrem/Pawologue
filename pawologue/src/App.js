@@ -39,6 +39,7 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/chat" element={<Chat createdBy={createdBy} currentUser={currentUser} />} />
             <Route path="/dognotices" element={<DogNotices />} />
+            
           </Routes>
         </div>
       </Router>
