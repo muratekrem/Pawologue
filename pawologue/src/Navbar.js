@@ -6,6 +6,7 @@ import logo from "./logo.png";
 const styles = {
   container: {
     display: "flex",
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     backgroundColor: "#684589",
@@ -14,6 +15,7 @@ const styles = {
     width: "100%",
     boxSizing: "border-box",
     boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+    flexWrap: "wrap",
   },
   logo: {
     height: "50px", 
@@ -25,12 +27,13 @@ const styles = {
     fontSize: "1.5rem",
     fontWeight: "bold",
     display: "flex",
-    alignItems: "center"
+    alignItems: "center",
   },
   mainLinks: {
     display: 'flex',
     justifyContent: 'center',
     flex: '1',
+    flexWrap: 'wrap',
   },
   button: {
     padding: "8px 12px",
@@ -41,12 +44,13 @@ const styles = {
     border: "none",
     cursor: "pointer",
     textAlign: "center",
-    margin: "0 2px",
+    margin: "5px 2px",
   },
   authButtons: {
     display: "flex",
     alignItems: "center",
     justifyContent: "flex-end",
+    flexWrap: 'wrap',
   },
   authButton: {
     backgroundColor: "#fff",
@@ -57,7 +61,7 @@ const styles = {
     border: "none",
     cursor: "pointer",
     textAlign: "center",
-    margin: "0 2px",
+    margin: "5px 2px",
   }
 };
 
