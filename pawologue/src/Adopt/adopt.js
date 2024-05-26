@@ -71,7 +71,7 @@ const Adopt = () => {
       <h2>Adopt</h2>
       <div className="pet-container">
         <div className="column">
-          <h3>Cats</h3>
+          <h3 style={{marginLeft:"5px"}}>Cats</h3>
           <div className="pet-card-wrapper">
             {adoptedPets.map((pet, index) => {
               if (pet.type === "cat") {
