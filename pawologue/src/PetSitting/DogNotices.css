@@ -2,7 +2,7 @@
 .pet-content {
     padding: 10px;
     margin: 0 ; /* İçeriği sarmalayan boşluk */
-    height:55vh;
+    height:50vh;
     align-items: center;
   }
   
@@ -15,6 +15,7 @@
   
   .pet-container {
     display: flex;  
+    justify-content: center;
   }
   
   .pet-info-text {

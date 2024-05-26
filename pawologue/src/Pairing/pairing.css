@@ -22,8 +22,8 @@
   }
   
   .pairing-photo {
-    width: 500px; /* Fotoğrafın başlangıç genişliği */
-    height: 500px; /* Fotoğrafın başlangıç yüksekliği */
+    width: 400px; /* Fotoğrafın başlangıç genişliği */
+    height: 400px; /* Fotoğrafın başlangıç yüksekliği */
     object-fit: cover; /* Fotoğrafın içeriğinin boyutuna göre kırpılmasını sağlar */
     cursor: pointer; /* Fare imlecinin değişmesi için */
   }
