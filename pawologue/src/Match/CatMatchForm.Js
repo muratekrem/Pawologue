@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import Navbar from '../Navbar';
 
-const CatMatch = () => {
+const CatMatchForm = () => {
     const [result, setResult] = useState('');
 
     const handleSubmit = async (e) => {
@@ -33,6 +34,8 @@ const CatMatch = () => {
     };
 
     return (
+        <div>
+            <Navbar></Navbar>    
         <div className="container">
             <h1>Cat Match</h1>
             <form onSubmit={handleSubmit}>
@@ -124,7 +127,8 @@ const CatMatch = () => {
             </form>
             <div id="result">{result}</div>
         </div>
+        </div>
     );
 };
 
-export default CatMatch;
+export default CatMatchForm;

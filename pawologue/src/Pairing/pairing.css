@@ -1,58 +1,52 @@
-
-.ayar {
+.pairing-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 65vh; /* Tüm ekranı kapsaması için */
+  }
+  
+  .pairing-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .pairing-photo-wrapper {
+    display: inline-block;
+    transition: transform 0.3s ease-in-out;
+    margin-top: 10px; /* Fotoğrafların başlıklardan biraz aşağıda olmasını sağlar */
+  }
+  
+  .pairing-photo-wrapper:hover .pairing-photo {
+    transform: scale(1.1);
+  }
+  
+  .pairing-photo {
+    width: 500px; /* Fotoğrafın başlangıç genişliği */
+    height: 500px; /* Fotoğrafın başlangıç yüksekliği */
+    object-fit: cover; /* Fotoğrafın içeriğinin boyutuna göre kırpılmasını sağlar */
+    cursor: pointer; /* Fare imlecinin değişmesi için */
+  }
+  
+  h2 {
     display: flex;
     justify-content: center;
-}
-.container { 
-    padding: 10px 200px 10px 200px;
-    margin: 30px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    max-width: 400px;
+  }
+  
+  .button {
+    padding: 8px 12px;
+    border-radius: 5px;
     background-color: #684589;
-}
-
-h1 {
-    text-align: center;
-    color: #ffffff;
-}
-
-label {
-    display: block;
-    margin-top: 10px;
-    font-weight: bold;
-    color: #ffffff;
-}
-
-select {
-    width: 100%;
-    padding: 6px;
-    margin-top: 3px;
-    margin-bottom: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-}
-
-button {
-    width: 100%;
-    padding: 5px;
-    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
     border: none;
-    border-radius: 4px;
-    color: white;
-    font-size: 16px;
     cursor: pointer;
-    margin-top: 10px;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
-
-#result {
-    margin-top: 20px;
     text-align: center;
-    font-size: 18px;
-    color: #ffffff;
-}
+    margin: 5px 2px;
+  }
+  .disabled-link {
+    pointer-events: none; /* Linklere tıklanamaz */
+    opacity: 0.5; /* Opaklık azalır */
+    cursor: not-allowed; /* Fare imleci değiştirilir */
+  }
+  

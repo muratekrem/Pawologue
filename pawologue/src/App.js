@@ -11,6 +11,10 @@ import Homepage from "./Homepage/homepage";
 import Profile from "./Profile/profile";
 import Chat from "./Chat/chat";
 import DogNotices from "./PetSitting/DogNotices";
+import DogMatchForm from "./Match/DogMatchForm";
+import CatMatchForm from "./Match/CatMatchForm";
+import AddDog from "./AddPet/addDog";
+import AddCat from "./AddPet/addCat";
 
 function App() {
   const [adoptedPets, setAdoptedPets] = useState([]);
@@ -39,7 +43,10 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/chat" element={<Chat createdBy={createdBy} currentUser={currentUser} />} />
             <Route path="/dognotices" element={<DogNotices />} />
-            
+            <Route path="/dogmatchform" element={<DogMatchForm />} />
+            <Route path="/catmatchform" element={<CatMatchForm />} />
+            <Route path="/adddog" element={<AddDog />} />
+            <Route path="/addcat" element={<AddCat />} />
           </Routes>
         </div>
       </Router>
