@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../Navbar";
 import { getDatabase, ref, get } from "firebase/database";
 import { Link } from "react-router-dom";
-import "./DogNotices.css"
+import "./DogNotices.css";
 
 const DogNotice = () => {
   const [sittingNotices, setSittingNotices] = useState([]);

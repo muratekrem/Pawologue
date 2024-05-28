@@ -70,7 +70,7 @@ p {
   margin-top: 10px;
 }
 
-/* Medium ekranlar için */
+/* Burası Med */
 @media (min-width: 768px) {
   .column {
     width: 48%;
@@ -90,7 +90,7 @@ p {
   }
 }
 
-/* Large ekranlar için */
+/* Burası Lar */
 @media (min-width: 1024px) {
   .pet-card-wrapper {
     justify-content: space-between;
