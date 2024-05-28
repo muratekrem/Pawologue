@@ -257,7 +257,7 @@ const Rehome = ({ onSubmit }) => {
         {submittedNotices.map((notice, index) => (
           <div key={index}>
             <p>
-              {notice.name} - {notice.type}
+              {notice.name} - {notice.breed}
             </p>
             <button onClick={() => removeNotice(notice.id)}>Remove</button>
           </div>

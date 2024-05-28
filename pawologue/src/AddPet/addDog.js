@@ -1,21 +1,29 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../Navbar";
 import "./addDog.css"; // Stil için CSS dosyasını içe aktar
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
 
 const AddDog = ({ onSubmit }) => {
   const [currentUser, setCurrentUser] = useState(null);
-  const [submitDone, setSubmitDone] = useState(false);
+  const [submittedNotices, setSubmittedNotices] = useState([]);
+  const [fileInputKey, setFileInputKey] = useState(Date.now()); // File input key
+  const [submitSuccess, setSubmitSuccess] = useState(false); // Submit başarılı mı?
   const storage = getStorage();
 
   useEffect(() => {
-    const storedCurrentUser = localStorage.getItem("currentUser");
+    const storedCurrentUser = localStorage.getItem(`currentUser`);
     if (storedCurrentUser) {
       setCurrentUser(JSON.parse(storedCurrentUser));
     }
   }, []);
 
   const [dogInfo, setDogInfo] = useState({
+    name: "",
     breed: "",
     countryOfOrigin: "",
     furColor: "",
@@ -26,6 +34,33 @@ const AddDog = ({ onSubmit }) => {
     health: "",
     photo: null,
   });
+
+  useEffect(() => {
+    const fetchNotices = async () => {
+      try {
+        const response = await fetch(
+          "https://pawologue-default-rtdb.firebaseio.com/DogDBMatch.json"
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch notices");
+        }
+        const data = await response.json();
+        const notices = [];
+        for (const key in data) {
+          const notice = { id: key, ...data[key] };
+          if (!currentUser || notice.createdBy !== currentUser.name) {
+            continue;
+          }
+          notices.push(notice);
+        }
+        setSubmittedNotices(notices);
+      } catch (error) {
+        console.error("Error fetching notices:", error);
+      }
+    };
+
+    fetchNotices();
+  }, [currentUser]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -45,11 +80,17 @@ const AddDog = ({ onSubmit }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
+    const updatedDogInfo = {
+      ...dogInfo,
+      createdBy: currentUser.name,
+      email: currentUser.email,
+    };
+
     try {
-      const storageRef = ref(storage, "dogPhotos/" + dogInfo.photo.name);
+      const storageRef = ref(storage, "photos/" + dogInfo.photo.name);
       const uploadTask = uploadBytesResumable(storageRef, dogInfo.photo);
-  
+
       uploadTask.on(
         "state_changed",
         (snapshot) => {
@@ -60,239 +101,291 @@ const AddDog = ({ onSubmit }) => {
         (error) => {
           console.error("Error uploading file", error);
         },
-        async () => {
-          try {
-            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-            const updatedDogInfo = {
-              ...dogInfo,
-              photoURL: downloadURL,
-              userName: currentUser?.name,
-              userEmail: currentUser?.email,
-            };
-  
-            const response = await fetch(
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            updatedDogInfo.photoURL = downloadURL;
+
+            fetch(
               "https://pawologue-default-rtdb.firebaseio.com/DogDBMatch.json",
               {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(updatedDogInfo),
               }
-            );
-  
-            if (response.ok) {
-              console.log("Dog info sent to database");
-              console.log("Dog info:", updatedDogInfo);
-              setDogInfo({
-                breed: "",
-                countryOfOrigin: "",
-                furColor: "",
-                height: "",
-                eyeColor: "",
-                age: "",
-                character: "",
-                health: "",
-                photo: null,
+            )
+              .then((res) => {
+                if (res.ok) {
+                  console.log("Message sent to database");
+                  onSubmit(updatedDogInfo);
+                  setSubmitSuccess(true); // Başarı durumunu ayarla
+                  setDogInfo((prevState) => ({  // Form alanlarını sıfırla
+                    ...prevState,
+                    name: "",
+                    breed: "",
+                    countryOfOrigin: "",
+                    furColor: "",
+                    height: "",
+                    eyeColor: "",
+                    age: "",
+                    character: "",
+                    health: "",
+                    photo: null,
+                  }));
+                  setFileInputKey(Date.now()); // Input alanını sıfırla
+                } else {
+                  console.log("Message didn't send. Error!");
+                }
+              })
+              .catch((error) => {
+                console.error("Error sending message:", error);
               });
-              setSubmitDone(true);
-            } else {
-              console.log("Dog info didn't send. Error!");
-            }
-          } catch (error) {
-            console.error("Error sending dog info:", error);
-          }
+          });
         }
       );
     } catch (error) {
       console.error("Error uploading file:", error);
     }
   };
+  const outPut = () => {
+    <p>We add your dog to our system successfully.</p>
+  }
+
+  const removeNotice = (id) => {
+    fetch(
+      `https://pawologue-default-rtdb.firebaseio.com/DogDBMatch/${id}.json`,
+      {
+        method: "DELETE",
+      }
+    )
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to delete notice");
+        }
+        const updatedNotices = submittedNotices.filter(
+          (notice) => notice.id !== id
+        );
+        setSubmittedNotices(updatedNotices);
+      })
+      .catch((error) => {
+        console.error("Error deleting notice:", error);
+      });
+  };
+
   return (
     <div>
       <Navbar />
-      <div className="add-dog-container">
-        <div className="dog-box">
-          <h2>Add Dog Information</h2>
-          <form onSubmit={handleSubmit}>
-            <select name="breed" value={dogInfo.breed} onChange={handleChange}>
-              <option value="">Select Breed</option>
-              <option value="000001">Labrador Retriever</option>
-              <option value="000010">German Shepherd</option>
-              <option value="000011">Bulldog</option>
-              <option value="000100">Poodle</option>
-              <option value="000101">Beagle</option>
-              <option value="000110">Chihuahua</option>
-              <option value="000111">Boxer</option>
-              <option value="001000">Golden Retriever</option>
-              <option value="001001">Pug</option>
-              <option value="001010">Rottweiler</option>
-              <option value="001011">Siberian Husky</option>
-              <option value="001100">Dachshund</option>
-              <option value="001101">Shih Tzu</option>
-              <option value="001110">Bichon Frise</option>
-              <option value="001111">Australian Shepherd</option>
-              <option value="010000">Basset Hound</option>
-              <option value="010001">Cocker Spaniel</option>
-              <option value="010010">French Bulldog</option>
-              <option value="010011">Pomeranian</option>
-              <option value="010100">Great Dane</option>
-              <option value="010101">Mastiff</option>
-              <option value="010110">Newfoundland</option>
-              <option value="010111">Saint Bernard</option>
-              <option value="011000">Old English Sheepdog</option>
-              <option value="011001">Irish Wolfhound</option>
-              <option value="011010">Greyhound</option>
-              <option value="011011">Scottish Deerhound</option>
-              <option value="011100">Great Pyrenees</option>
-              <option value="011101">Shar Pei</option>
-              <option value="011110">Doberman Pinscher</option>
-              <option value="011111">Pekingese</option>
-              <option value="100000">Bernese Mountain Dog</option>
-              <option value="100001">Pembroke Welsh Corgi</option>
-              <option value="100010">Shetland Sheepdog</option>
-              <option value="100011">Weimaraner</option>
-              <option value="100100">Cavalier King Charles Spaniel</option>
-              <option value="100101">Border Collie</option>
-              <option value="100110">Chesapeake Bay Retriever</option>
-              <option value="100111">Collie</option>
-              <option value="101000">Dalmatian</option>
-            </select>
-            <select
-              name="countryOfOrigin"
-              value={dogInfo.countryOfOrigin}
-              onChange={handleChange}
-            >
-              <option value="">Select Country of Origin</option>
-              <option value="0001">Canada</option>
-              <option value="0010">Germany</option>
-              <option value="0011">England</option>
-              <option value="0100">France</option>
-              <option value="0101">Mexico</option>
-              <option value="0110">Scotland</option>
-              <option value="0111">China</option>
-              <option value="1000">Russia</option>
-              <option value="1001">Australia</option>
-              <option value="1010">Switzerland</option>
-              <option value="1011">United Kingdom</option>
-              <option value="1100">Ireland</option>
-              <option value="1101">United States</option>
-            </select>
-            <select
-              name="furColor"
-              value={dogInfo.furColor}
-              onChange={handleChange}
-            >
-              <option value="">Select Fur Color</option>
-              <option value="00001">Yellow</option>
-              <option value="00010">Black</option>
-              <option value="00011">White</option>
-              <option value="00100">Fawn</option>
-              <option value="00101">Golden</option>
-              <option value="00110">Orange</option>
-              <option value="00111">Apricot</option>
-              <option value="01000">Red</option>
-              <option value="01001">Blue</option>
-              <option value="01010">Grey</option>
-              <option value="01011">Cream</option>
-              <option value="01100">Varies</option>
-              <option value="01101">Tricolor</option>
-              <option value="01110">Various</option>
-              <option value="01111">Black & Tan</option>
-            </select>
-            <select
-              name="height"
-              value={dogInfo.height}
-              onChange={handleChange}
-            >
-              <option value="">Select Height</option>
-              <option value="110">59CM ++</option>
-              <option value="101">44CM - 58CM</option>
-              <option value="100">38CM - 43CM</option>
-              <option value="011">31CM - 37CM</option>
-              <option value="010">24CM - 30CM</option>
-              <option value="001">23CM --</option>
-            </select>
-            <select
-              name="eyeColor"
-              value={dogInfo.eyeColor}
-              onChange={handleChange}
-            >
-              <option value="">Select Eye Color</option>
-              <option value="01">Brown</option>
-              <option value="10">Blue</option>
-              <option value="11">Varies</option>
-            </select>
-            <select name="age" value={dogInfo.age} onChange={handleChange}>
-              <option value="">Select Age</option>
-              <option value="00010">1</option>
-              <option value="00011">2</option>
-              <option value="00011">3</option>
-              <option value="00100">4</option>
-              <option value="00101">5</option>
-              <option value="00110">6</option>
-              <option value="00111">7</option>
-              <option value="01000">8</option>
-              <option value="01001">9</option>
-              <option value="01010">10</option>
-              <option value="01011">11</option>
-              <option value="01100">12</option>
-              <option value="01101">13</option>
-              <option value="01110">14</option>
-              <option value="01111">15</option>
-              <option value="10000">16</option>
-              <option value="10001">17</option>
-              <option value="10010">18</option>
-            </select>
-            <select
-              name="character"
-              value={dogInfo.character}
-              onChange={handleChange}
-            >
-              <option value="">Select Character</option>
-              <option value="00001">Loyal</option>
-              <option value="00010">Playful</option>
-              <option value="00011">Gentle</option>
-              <option value="00100">Intelligent</option>
-              <option value="00101">Energetic</option>
-              <option value="00110">Independent</option>
-              <option value="00111">Confident</option>
-              <option value="01000">Brave</option>
-              <option value="01001">Kind</option>
-              <option value="01010">Good-natured</option>
-              <option value="01011">Curious</option>
-              <option value="01100">Sensitive</option>
-              <option value="01101">Charming</option>
-              <option value="01110">Strong</option>
-              <option value="01111">Patient</option>
-              <option value="10000">Athletic</option>
-              <option value="10001">Social</option>
-              <option value="10010">Protective</option>
-              <option value="10011">Affectionate</option>
-              <option value="10100">Outgoing</option>
-              <option value="10101">Friendly</option>
-              <option value="10110">Alert</option>
-            </select>
-            <select
-              name="health"
-              value={dogInfo.health}
-              onChange={handleChange}
-            >
-              <option value="">Select Health</option>
-              <option value="001">Healthy</option>
-              <option value="010">Hip dysplasia</option>
-              <option value="011">Ear infections</option>
-              <option value="100">Dental problems</option>
-              <option value="101">Eye problems</option>
-              <option value="110">Breathing problems</option>
-            </select>
-            <input type="file" name="photo" onChange={handlePhotoChange} />
-            <button type="submit" disabled={!dogInfo.photo || !currentUser}>
-              Submit
-            </button>
-            {dogInfo.submitDone && (
-              <p>We added your dog to our system successfully.</p>
-            )}
-          </form>
+      <div className="rehome-container">
+        <h2>Dog Info</h2>
+
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            name="name"
+            placeholder="Enter pet name"
+            value={dogInfo.name}
+            onChange={handleChange}
+          />
+          <select
+            name="breed"
+            value={dogInfo.breed}
+            onChange={handleChange}
+          >
+            <option>Select Breed</option>
+            <option>Labrador Retriever</option>
+            <option>German Shepherd</option>
+            <option>Bulldog</option>
+            <option>Poodle</option>
+            <option>Beagle</option>
+            <option>Chihuahua</option>
+            <option>Boxer</option>
+            <option>Golden Retriever</option>
+            <option>Pug</option>
+            <option>Rottweiler</option>
+            <option>Siberian Husky</option>
+            <option>Dachshund</option>
+            <option>Shih Tzu</option>
+            <option>Bichon Frise</option>
+            <option>Australian Shepherd</option>
+            <option>Basset Hound</option>
+            <option>Cocker Spaniel</option>
+            <option>French Bulldog</option>
+            <option>Pomeranian</option>
+            <option>Great Dane</option>
+            <option>Mastiff</option>
+            <option>Newfoundland</option>
+            <option>Saint Bernard</option>
+            <option>Old English Sheepdog</option>
+            <option>Irish Wolfhound</option>
+            <option>Greyhound</option>
+            <option>Scottish Deerhound</option>
+            <option>Great Pyrenees</option>
+            <option>Shar Pei</option>
+            <option>Doberman Pinscher</option>
+            <option>Pekingese</option>
+            <option>Bernese Mountain Dog</option>
+            <option>Pembroke Welsh Corgi</option>
+            <option>Shetland Sheepdog</option>
+            <option>Weimaraner</option>
+            <option>Cavalier King Charles Spaniel</option>
+            <option>Border Collie</option>
+            <option>Chesapeake Bay Retriever</option>
+            <option>Collie</option>
+            <option>Dalmatian</option>
+          </select>
+          <select
+            name="countryOfOrigin"
+            value={dogInfo.countryOfOrigin}
+            onChange={handleChange}
+          >
+            <option>Select Country of Origin</option>
+            <option>Canada</option>
+            <option>Germany</option>
+            <option>England</option>
+            <option>France</option>
+            <option>Mexico</option>
+            <option>Scotland</option>
+            <option>China</option>
+            <option>Russia</option>
+            <option>Australia</option>
+            <option>Switzerland</option>
+            <option>United Kingdom</option>
+            <option>Ireland</option>
+            <option>United States</option>
+          </select>
+          <select
+            name="furColor"
+            value={dogInfo.furColor}
+            onChange={handleChange}
+          >
+            <option>Select Fur Color</option>
+            <option>Yellow</option>
+            <option>Black</option>
+            <option>White</option>
+            <option>Fawn</option>
+            <option>Golden</option>
+            <option>Orange</option>
+            <option>Apricot</option>
+            <option>Red</option>
+            <option>Blue</option>
+            <option>Grey</option>
+            <option>Cream</option>
+            <option>Varies</option>
+            <option>Tricolor</option>
+            <option>Various</option>
+            <option>Black & Tan</option>
+          </select>
+          <select
+            name="height"
+            value={dogInfo.height}
+            onChange={handleChange}
+          >
+            <option>Select Height</option>
+            <option>59CM ++</option>
+            <option>44CM - 58CM</option>
+            <option>38CM - 43CM</option>
+            <option>31CM - 37CM</option>
+            <option>24CM - 30CM</option>
+            <option>23CM --</option>
+          </select>
+          <select
+            name="eyeColor"
+            value={dogInfo.eyeColor}
+            onChange={handleChange}
+          >
+            <option>Select Eye Color</option>
+            <option>Brown</option>
+            <option>Blue</option>
+          </select>
+          <select
+            name="age"
+            value={dogInfo.age}
+            onChange={handleChange}
+          >
+            <option>Select Age</option>
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+            <option>6</option>
+            <option>7</option>
+            <option>8</option>
+            <option>9</option>
+            <option>10</option>
+            <option>11</option>
+            <option>12</option>
+            <option>13</option>
+            <option>14</option>
+            <option>15</option>
+            <option>16</option>
+            <option>17</option>
+            <option>18</option>
+          </select>
+          <select
+            name="character"
+            value={dogInfo.character}
+            onChange={handleChange}
+          >
+            <option>Select Character</option>
+            <option>Friendly</option>
+            <option>Intelligent</option>
+            <option>Playful</option>
+            <option>Loyal</option>
+            <option>Energetic</option>
+            <option>Protective</option>
+            <option>Affectionate</option>
+            <option>Calm</option>
+            <option>Social</option>
+            <option>Independent</option>
+          </select>
+          <select
+            name="health"
+            value={dogInfo.health}
+            onChange={handleChange}
+          >
+            <option>Select Health</option>
+            <option>Very Good</option>
+            <option>Good</option>
+            <option>Fair</option>
+            <option>Poor</option>
+            <option>Very Poor</option>
+          </select>
+          <input
+            key={fileInputKey} // Key değişikliği burada uygulanıyor
+            type="file"
+            name="photo"
+            onChange={handlePhotoChange}
+          />
+          <button
+            type="submit"
+            disabled={
+              !dogInfo.breed ||
+              !dogInfo.eyeColor ||
+              !dogInfo.furColor ||
+              !dogInfo.character ||
+              !dogInfo.countryOfOrigin ||
+              !dogInfo.age ||
+              !dogInfo.health ||
+              !dogInfo.height ||
+              !dogInfo.name ||
+              !dogInfo.photo
+            }
+          >
+            Submit
+          </button>
+        </form>
         </div>
+      {submitSuccess && <p>We add your dog to our system successfully.</p>}
+      <div className="remove-notice">
+        <h2>Remove notice</h2>
+        <ul>
+          {submittedNotices.map((notice) => (
+            <li key={notice.id}>
+              {notice.name} ({notice.breed})
+              <button onClick={() => removeNotice(notice.id)}>Remove</button>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );

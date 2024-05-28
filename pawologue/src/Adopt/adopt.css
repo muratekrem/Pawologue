@@ -14,6 +14,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  margin: 7px;
 }
 
 .pet-info-text {
@@ -97,7 +98,7 @@ p {
   }
 
   .pet-card {
-    width: calc(45% - 20px);
+    width: calc(43% - 20px);
     
   }
 }

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../Navbar";
 import { getDatabase, ref, get } from "firebase/database";
-import { Link } from "react-router-dom";
 import "./adopt.css";
+import { Link } from "react-router-dom";
 
 const Adopt = () => {
   const [adoptedPets, setAdoptedPets] = useState([]);
