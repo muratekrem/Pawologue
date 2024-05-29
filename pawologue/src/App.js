@@ -31,6 +31,11 @@ function App() {
     // For example, you can save it to a database or perform any other necessary actions
     console.log("Submitting dog data:", dogData);
   };
+  const handleSubmitCat = (catData) => {
+    // Here you can handle the submission of the dog data
+    // For example, you can save it to a database or perform any other necessary actions
+    console.log("Submitting dog data:", catData);
+  };
 
   return (
     <div style={styles.container}>
@@ -52,7 +57,7 @@ function App() {
             <Route path="/dogmatchform" element={<DogMatchForm />} />
             <Route path="/catmatchform" element={<CatMatchForm />} />
             <Route path="/adddog" element={<AddDog onSubmit={handleSubmitDog} />} />
-            <Route path="/addcat" element={<AddCat />} />
+            <Route path="/addcat" element={<AddCat onSubmit={handleSubmitCat}/>} />
           </Routes>
         </div>
       </Router>

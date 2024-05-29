@@ -24,6 +24,7 @@ const AddDog = ({ onSubmit }) => {
 
   const [dogInfo, setDogInfo] = useState({
     name: "",
+    location:"",
     breed: "",
     countryOfOrigin: "",
     furColor: "",
@@ -125,6 +126,7 @@ const AddDog = ({ onSubmit }) => {
                   console.log(submitSuccess);
                   setDogInfo({  // Form alanlarını sıfırla
                     name: "",
+                    location:"",
                     breed: "",
                     countryOfOrigin: "",
                     furColor: "",
@@ -188,6 +190,13 @@ const AddDog = ({ onSubmit }) => {
             name="name"
             placeholder="Enter pet name"
             value={dogInfo.name}
+            onChange={handleChange}
+          />
+          <input
+            type="text"
+            name="location"
+            placeholder="Enter location"
+            value={dogInfo.location}
             onChange={handleChange}
           />
           <select
@@ -373,6 +382,7 @@ const AddDog = ({ onSubmit }) => {
               !dogInfo.health ||
               !dogInfo.height ||
               !dogInfo.name ||
+              !dogInfo.location ||
               !dogInfo.photo
             }
           >

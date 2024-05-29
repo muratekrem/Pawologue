@@ -56,3 +56,78 @@ button:hover {
     font-size: 18px;
     color: #ffffff;
 }
+.pet-card-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+  }
+.pet-content {
+    padding: 10px;
+    margin: 0 5px;
+    height: auto;
+  }
+  
+  .pet-details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .pet-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin: 7px;
+  }
+  
+  .pet-info-text {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .column {
+    width: 100%;
+  }
+  
+  .divider {
+    height: 1px;
+    width: 80%;
+    background-color: #ccc;
+    margin: 20px 0;
+  }
+  
+  .pet-card {
+    width: 100%;
+    max-width: 320px;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 3px solid #ccc;
+  }
+
+  
+  .pet-card img {
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+  
+  p {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .button {
+    padding: 8px 16px;
+    border-radius: 5px;
+    background-color: #6a1b9a;
+    color: #ffffff;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  
+  
