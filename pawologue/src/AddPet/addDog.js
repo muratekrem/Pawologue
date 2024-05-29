@@ -33,6 +33,7 @@ const AddDog = ({ onSubmit }) => {
     character: "",
     health: "",
     photo: null,
+    submitDone: false,
   });
 
   useEffect(() => {
@@ -59,7 +60,9 @@ const AddDog = ({ onSubmit }) => {
       }
     };
 
-    fetchNotices();
+    if (currentUser) {
+      fetchNotices();
+    }
   }, [currentUser]);
 
   const handleChange = (e) => {
@@ -118,8 +121,9 @@ const AddDog = ({ onSubmit }) => {
                   console.log("Message sent to database");
                   onSubmit(updatedDogInfo);
                   setSubmitSuccess(true); // Başarı durumunu ayarla
-                  setDogInfo((prevState) => ({  // Form alanlarını sıfırla
-                    ...prevState,
+                  console.log("123");
+                  console.log(submitSuccess);
+                  setDogInfo({  // Form alanlarını sıfırla
                     name: "",
                     breed: "",
                     countryOfOrigin: "",
@@ -130,8 +134,12 @@ const AddDog = ({ onSubmit }) => {
                     character: "",
                     health: "",
                     photo: null,
-                  }));
+                    submitDone:true,
+                  });
                   setFileInputKey(Date.now()); // Input alanını sıfırla
+                  setTimeout(() => {
+                    setSubmitSuccess(false);
+                  }, 5000); // 5 saniye sonra mesajı gizle
                 } else {
                   console.log("Message didn't send. Error!");
                 }
@@ -146,9 +154,6 @@ const AddDog = ({ onSubmit }) => {
       console.error("Error uploading file:", error);
     }
   };
-  const outPut = () => {
-    <p>We add your dog to our system successfully.</p>
-  }
 
   const removeNotice = (id) => {
     fetch(
@@ -190,7 +195,7 @@ const AddDog = ({ onSubmit }) => {
             value={dogInfo.breed}
             onChange={handleChange}
           >
-            <option>Select Breed</option>
+            <option value="">Select Breed</option>
             <option>Labrador Retriever</option>
             <option>German Shepherd</option>
             <option>Bulldog</option>
@@ -237,7 +242,7 @@ const AddDog = ({ onSubmit }) => {
             value={dogInfo.countryOfOrigin}
             onChange={handleChange}
           >
-            <option>Select Country of Origin</option>
+            <option value="">Select Country of Origin</option>
             <option>Canada</option>
             <option>Germany</option>
             <option>England</option>
@@ -257,7 +262,7 @@ const AddDog = ({ onSubmit }) => {
             value={dogInfo.furColor}
             onChange={handleChange}
           >
-            <option>Select Fur Color</option>
+            <option value="">Select Fur Color</option>
             <option>Yellow</option>
             <option>Black</option>
             <option>White</option>
@@ -279,7 +284,7 @@ const AddDog = ({ onSubmit }) => {
             value={dogInfo.height}
             onChange={handleChange}
           >
-            <option>Select Height</option>
+            <option value="">Select Height</option>
             <option>59CM ++</option>
             <option>44CM - 58CM</option>
             <option>38CM - 43CM</option>
@@ -292,7 +297,7 @@ const AddDog = ({ onSubmit }) => {
             value={dogInfo.eyeColor}
             onChange={handleChange}
           >
-            <option>Select Eye Color</option>
+            <option value="">Select Eye Color</option>
             <option>Brown</option>
             <option>Blue</option>
           </select>
@@ -301,7 +306,7 @@ const AddDog = ({ onSubmit }) => {
             value={dogInfo.age}
             onChange={handleChange}
           >
-            <option>Select Age</option>
+            <option value="">Select Age</option>
             <option>1</option>
             <option>2</option>
             <option>3</option>
@@ -326,7 +331,7 @@ const AddDog = ({ onSubmit }) => {
             value={dogInfo.character}
             onChange={handleChange}
           >
-            <option>Select Character</option>
+            <option value="">Select Character</option>
             <option>Friendly</option>
             <option>Intelligent</option>
             <option>Playful</option>
@@ -343,7 +348,7 @@ const AddDog = ({ onSubmit }) => {
             value={dogInfo.health}
             onChange={handleChange}
           >
-            <option>Select Health</option>
+            <option value="">Select Health</option>
             <option>Very Good</option>
             <option>Good</option>
             <option>Fair</option>
@@ -374,8 +379,8 @@ const AddDog = ({ onSubmit }) => {
             Submit
           </button>
         </form>
-        </div>
-      {submitSuccess && <p>We add your dog to our system successfully.</p>}
+        {dogInfo.submitDone && <p>We add your dog to our system successfully.</p>}
+      </div>
       <div className="remove-notice">
         <h2>Remove notice</h2>
         <ul>
@@ -390,5 +395,4 @@ const AddDog = ({ onSubmit }) => {
     </div>
   );
 };
-
 export default AddDog;
