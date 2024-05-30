@@ -221,6 +221,7 @@ const AddCat = ({ onSubmit }) => {
                 <option>Cornish Rex</option>
                 <option>Turkish Angora</option>
                 <option>Tonkinese</option>
+                <option>Himalayan</option>
           </select>
           <select
             name="age"
