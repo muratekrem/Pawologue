@@ -19,10 +19,13 @@ const Pairing = () => {
     <div>
       <Navbar />
       <h3 style={{ display: "flex", justifyContent: "center" }}>
-        We use the best algorithm for matching pets. You must see a vet for your
-        pet's health issues.
+        We use one of the best algorithm for matching pets. You must see a vet
+        for your pet's health issues.
       </h3>
-      <h3 style={{display:"flex", justifyContent:"center"}}>  For finding best partner for your pet, you must Login/Sign Up first</h3>
+      <h3 style={{ display: "flex", justifyContent: "center" }}>
+        {" "}
+        For finding best partner for your pet, you must Login/Sign Up first
+      </h3>
       <div style={{ display: "flex", justifyContent: "space-around" }}>
         <Link
           to="/addcat"

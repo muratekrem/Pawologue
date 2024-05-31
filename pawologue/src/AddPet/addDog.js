@@ -24,7 +24,7 @@ const AddDog = ({ onSubmit }) => {
 
   const [dogInfo, setDogInfo] = useState({
     name: "",
-    location:"",
+    location: "",
     breed: "",
     countryOfOrigin: "",
     furColor: "",
@@ -124,9 +124,10 @@ const AddDog = ({ onSubmit }) => {
                   setSubmitSuccess(true); // Başarı durumunu ayarla
                   console.log("123");
                   console.log(submitSuccess);
-                  setDogInfo({  // Form alanlarını sıfırla
+                  setDogInfo({
+                    // Form alanlarını sıfırla
                     name: "",
-                    location:"",
+                    location: "",
                     breed: "",
                     countryOfOrigin: "",
                     furColor: "",
@@ -136,7 +137,7 @@ const AddDog = ({ onSubmit }) => {
                     character: "",
                     health: "",
                     photo: null,
-                    submitDone:true,
+                    submitDone: true,
                   });
                   setFileInputKey(Date.now()); // Input alanını sıfırla
                   setTimeout(() => {
@@ -199,11 +200,7 @@ const AddDog = ({ onSubmit }) => {
             value={dogInfo.location}
             onChange={handleChange}
           />
-          <select
-            name="breed"
-            value={dogInfo.breed}
-            onChange={handleChange}
-          >
+          <select name="breed" value={dogInfo.breed} onChange={handleChange}>
             <option value="">Select Breed</option>
             <option>Labrador Retriever</option>
             <option>German Shepherd</option>
@@ -288,11 +285,7 @@ const AddDog = ({ onSubmit }) => {
             <option>Various</option>
             <option>Black & Tan</option>
           </select>
-          <select
-            name="height"
-            value={dogInfo.height}
-            onChange={handleChange}
-          >
+          <select name="height" value={dogInfo.height} onChange={handleChange}>
             <option value="">Select Height</option>
             <option>59CM ++</option>
             <option>44CM - 58CM</option>
@@ -310,11 +303,7 @@ const AddDog = ({ onSubmit }) => {
             <option>Brown</option>
             <option>Blue</option>
           </select>
-          <select
-            name="age"
-            value={dogInfo.age}
-            onChange={handleChange}
-          >
+          <select name="age" value={dogInfo.age} onChange={handleChange}>
             <option value="">Select Age</option>
             <option>1</option>
             <option>2</option>
@@ -342,6 +331,7 @@ const AddDog = ({ onSubmit }) => {
           >
             <option value="">Select Character</option>
             <option>Friendly</option>
+            <option>Confident</option>
             <option>Intelligent</option>
             <option>Playful</option>
             <option>Loyal</option>
@@ -351,18 +341,17 @@ const AddDog = ({ onSubmit }) => {
             <option>Calm</option>
             <option>Social</option>
             <option>Independent</option>
+            <option>Brave</option>
+            <option>Good natured</option>
           </select>
-          <select
-            name="health"
-            value={dogInfo.health}
-            onChange={handleChange}
-          >
+          <select name="health" value={dogInfo.health} onChange={handleChange}>
             <option value="">Select Health</option>
-            <option>Very Good</option>
-            <option>Good</option>
-            <option>Fair</option>
-            <option>Poor</option>
-            <option>Very Poor</option>
+            <option value="001">Healthy</option>
+            <option value="010">Hip dysplasia</option>
+            <option value="011">Ear infections</option>
+            <option value="100">Dental problems</option>
+            <option value="101">Eye problems</option>
+            <option value="110">Breathing problems</option>
           </select>
           <input
             key={fileInputKey} // Key değişikliği burada uygulanıyor
@@ -389,7 +378,9 @@ const AddDog = ({ onSubmit }) => {
             Submit
           </button>
         </form>
-        {dogInfo.submitDone && <p>We add your dog to our system successfully.</p>}
+        {dogInfo.submitDone && (
+          <p>We add your dog to our system successfully.</p>
+        )}
       </div>
       <div className="remove-notice">
         <h2>Remove notice</h2>

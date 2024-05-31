@@ -57,7 +57,7 @@ button:hover {
   color: #ffffff;
 }
 
-.cat-list {
+.pet-list {
   display: grid;
   grid-template-columns: repeat(
     auto-fit,

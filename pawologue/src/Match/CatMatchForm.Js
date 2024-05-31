@@ -206,7 +206,7 @@ const CatMatchForm = () => {
         </div>
         <div className="row mb-4"></div>
       </div>
-      <div className="cat-list">
+      <div className="pet-list">
         {showAllCats
           ? matchingCats.map((pet, index) => {
               if (currentUser) {
