@@ -1,133 +1,119 @@
-
 .ayar {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
-.container { 
-    padding: 10px 200px 10px 200px;
-    margin: 30px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    max-width: 400px;
-    background-color: #684589;
+
+.container {
+  padding: 10px 200px;
+  margin: 30px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  background-color: #684589;
 }
 
 h1 {
-    text-align: center;
-    color: #ffffff;
+  text-align: center;
+  color: #ffffff;
 }
 
 label {
-    display: block;
-    margin-top: 10px;
-    font-weight: bold;
-    color: #ffffff;
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+  color: #ffffff;
 }
 
 select {
-    width: 100%;
-    padding: 6px;
-    margin-top: 3px;
-    margin-bottom: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
+  width: 100%;
+  padding: 6px;
+  margin-top: 3px;
+  margin-bottom: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
 }
 
 button {
-    width: 100%;
-    padding: 5px;
-    background-color: #007bff;
-    border: none;
-    border-radius: 4px;
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-    margin-top: 10px;
+  width: 100%;
+  padding: 5px;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 10px;
 }
 
 button:hover {
-    background-color: #0056b3;
+  background-color: #0056b3;
 }
 
 #result {
-    margin-top: 20px;
-    text-align: center;
-    font-size: 18px;
-    color: #ffffff;
+  margin-top: 20px;
+  text-align: center;
+  font-size: 18px;
+  color: #ffffff;
 }
-.pet-card-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    align-items: center;
-  }
-.pet-content {
-    padding: 10px;
-    margin: 0 5px;
-    height: auto;
-  }
-  
-  .pet-details {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .pet-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    margin: 7px;
-  }
-  
-  .pet-info-text {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-  }
-  
-  .column {
-    width: 100%;
-  }
-  
-  .divider {
-    height: 1px;
-    width: 80%;
-    background-color: #ccc;
-    margin: 20px 0;
-  }
-  
-  .pet-card {
-    width: 100%;
-    max-width: 320px;
-    margin-bottom: 20px;
-    padding: 10px;
-    border: 3px solid #ccc;
-  }
 
-  
-  .pet-card img {
-    height: auto;
-    display: block;
-    margin: 0 auto;
-  }
-  
-  p {
-    display: flex;
-    justify-content: center;
-  }
-  
-  .button {
-    padding: 8px 16px;
-    border-radius: 5px;
-    background-color: #6a1b9a;
-    color: #ffffff;
-    text-decoration: none;
-    border: none;
-    cursor: pointer;
-    margin-top: 10px;
-  }
-  
-  
-  
+.cat-list {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(250px, 1fr)
+  ); /* İlginç bir genişlikte (250px) kolonlara bölün, kolonlar ekrana sığdıkça satıra yerleşir */
+  gap: 20px;
+  padding: 20px;
+  grid-auto-rows: min-content;
+}
+
+.pet-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+  transition: transform 0.3s;
+  width: 75%;
+  height: 100vh;
+  padding: 10px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.pet-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1; /* İlan içeriğinin dikeyde genişlemesini sağlar */
+}
+
+.pet-details {
+  margin-top: 8px;
+  flex-shrink: 0; /* Detayların kartın dışına taşmasını önler */
+}
+
+.pet-info-text {
+  margin: 4px 0;
+}
+
+.button {
+  background-color: #007bff;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+.pet-card:hover {
+  transform: translateY(-5px);
+}
