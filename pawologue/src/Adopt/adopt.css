@@ -1,7 +1,6 @@
 .pet-content {
   padding: 10px;
   margin: 0 5px;
-  height: auto;
 }
 
 .pet-details {
@@ -28,13 +27,11 @@
 }
 
 .divider {
-  height: 1px;
-  width: 80%;
-  background-color: #ccc;
-  margin: 20px 0;
+  height: 100%;
+  margin: 0 10px;
 }
 
-.pet-card {
+.pet-cardd {
   width: 100%;
   max-width: 320px;
   margin-bottom: 20px;
@@ -74,7 +71,8 @@ p {
 /* Burası Med */
 @media (min-width: 768px) {
   .column {
-    width: 48%;
+    width: 47%;
+    margin: 17px;
   }
 
   .divider {
@@ -97,8 +95,14 @@ p {
     justify-content: space-between;
   }
 
+  .divider {
+    display: block;
+    height: auto;
+    width: 2px;
+    background-color: #ccc;
+    margin: 0 20px;
+  }
   .pet-card {
-    width: calc(43% - 20px);
-    
+    width: calc(40% - 30px);
   }
 }

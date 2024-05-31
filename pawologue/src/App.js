@@ -36,6 +36,11 @@ function App() {
     // For example, you can save it to a database or perform any other necessary actions
     console.log("Submitting dog data:", catData);
   };
+  const handleSubmitPetSitting = (petData) => {
+    // Here you can handle the submission of the dog data
+    // For example, you can save it to a database or perform any other necessary actions
+    console.log("Submitting dog data:", petData);
+  };
 
   return (
     <div style={styles.container}>
@@ -45,19 +50,44 @@ function App() {
             <Route exact path="/" element={<Homepage />} />
             <Route path="/homepage" element={<Homepage />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/rehome" element={<Rehome currentUser={currentUser} onSubmit={handleAdopt} />} />
-            <Route path="/adopt" element={<Adopt adoptedPets={adoptedPets} onStartConversation={handleAdopt} />} />
+            <Route
+              path="/rehome"
+              element={
+                <Rehome currentUser={currentUser} onSubmit={handleAdopt} />
+              }
+            />
+            <Route
+              path="/adopt"
+              element={
+                <Adopt
+                  adoptedPets={adoptedPets}
+                  onStartConversation={handleAdopt}
+                />
+              }
+            />
             <Route path="/signup" element={<Signup />} />
             <Route path="/mapcomponent" element={<MapComponent />} />
             <Route path="/pairing" element={<Pairing />} />
-            <Route path="/petSitting" element={<PetSitting />} />
+            <Route
+              path="/petSitting"
+              element={<PetSitting onSubmit={handleSubmitPetSitting} />}
+            />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/chat" element={<Chat createdBy={createdBy} currentUser={currentUser} />} />
+            <Route
+              path="/chat"
+              element={<Chat createdBy={createdBy} currentUser={currentUser} />}
+            />
             <Route path="/dognotices" element={<DogNotices />} />
             <Route path="/dogmatchform" element={<DogMatchForm />} />
             <Route path="/catmatchform" element={<CatMatchForm />} />
-            <Route path="/adddog" element={<AddDog onSubmit={handleSubmitDog} />} />
-            <Route path="/addcat" element={<AddCat onSubmit={handleSubmitCat}/>} />
+            <Route
+              path="/adddog"
+              element={<AddDog onSubmit={handleSubmitDog} />}
+            />
+            <Route
+              path="/addcat"
+              element={<AddCat onSubmit={handleSubmitCat} />}
+            />
           </Routes>
         </div>
       </Router>

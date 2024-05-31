@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../Navbar";
 import "./rehome.css"; // Stil için CSS dosyasını içe aktar
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
 
 const Rehome = ({ onSubmit }) => {
   const [currentUser, setCurrentUser] = useState(null);
@@ -33,7 +38,9 @@ const Rehome = ({ onSubmit }) => {
   useEffect(() => {
     const fetchNotices = async () => {
       try {
-        const response = await fetch("https://pawologue-default-rtdb.firebaseio.com/Notice.json");
+        const response = await fetch(
+          "https://pawologue-default-rtdb.firebaseio.com/Notice.json"
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch notices");
         }
@@ -119,16 +126,18 @@ const Rehome = ({ onSubmit }) => {
     };
 
     try {
-      const storageRef = ref(storage, 'photos/' + petInfo.photo.name);
+      const storageRef = ref(storage, "photos/" + petInfo.photo.name);
       const uploadTask = uploadBytesResumable(storageRef, petInfo.photo);
 
-      uploadTask.on('state_changed',
+      uploadTask.on(
+        "state_changed",
         (snapshot) => {
-          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log('Upload is ' + progress + '% done');
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log("Upload is " + progress + "% done");
         },
         (error) => {
-          console.error('Error uploading file', error);
+          console.error("Error uploading file", error);
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
@@ -179,7 +188,9 @@ const Rehome = ({ onSubmit }) => {
         if (!response.ok) {
           throw new Error("Failed to delete notice");
         }
-        const updatedNotices = submittedNotices.filter((notice) => notice.id !== id);
+        const updatedNotices = submittedNotices.filter(
+          (notice) => notice.id !== id
+        );
         setSubmittedNotices(updatedNotices);
       })
       .catch((error) => {
@@ -192,11 +203,17 @@ const Rehome = ({ onSubmit }) => {
       <Navbar />
       <div className="rehome-container">
         <h2>Rehome</h2>
-        <div style={{ display: "flex", justifyContent: "space-around", marginBottom: "20px" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-around",
+            marginBottom: "20px",
+          }}
+        >
           <div>
             <button
               type="button"
-              disabled={dogSelected}
+              disabled={dogSelected || !currentUser}
               onClick={() => handleTypeSelection("dog")}
             >
               The pet is a Dog
@@ -205,7 +222,7 @@ const Rehome = ({ onSubmit }) => {
           <div>
             <button
               type="button"
-              disabled={catSelected}
+              disabled={catSelected || !currentUser}
               onClick={() => handleTypeSelection("cat")}
             >
               The pet is a Cat
@@ -247,12 +264,23 @@ const Rehome = ({ onSubmit }) => {
             name="photo"
             onChange={handlePhotoChange}
           />
-          <button type="submit" disabled={!petInfo.click || !petInfo.photo || !currentUser}>Submit</button>
-          {petInfo.submitDone && <p>We hope the life lives in a home, submit is done.</p>}
+          <button
+            type="submit"
+            disabled={!petInfo.click || !petInfo.photo || !currentUser}
+          >
+            Submit
+          </button>
+          {petInfo.submitDone && (
+            <p>We hope the life lives in a home, submit is done.</p>
+          )}
         </form>
       </div>
-      
-      <div style={{ display: "flex", justifyContent: "center" , marginTop:"10px" }}>My Notices</div>
+
+      <div
+        style={{ display: "flex", justifyContent: "center", marginTop: "10px" }}
+      >
+        My Notices
+      </div>
       <div style={{ display: "flex", justifyContent: "space-around" }}>
         {submittedNotices.map((notice, index) => (
           <div key={index}>
@@ -262,9 +290,8 @@ const Rehome = ({ onSubmit }) => {
             <button onClick={() => removeNotice(notice.id)}>Remove</button>
           </div>
         ))}
-        </div>
       </div>
- 
+    </div>
   );
 };
 

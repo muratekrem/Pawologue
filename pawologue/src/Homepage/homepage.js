@@ -2,39 +2,44 @@ import React from "react";
 import dogPhoto from "../dog.png";
 import catPhoto from "../cat.png";
 import Navbar from "../Navbar";
-import logobg from "../logobg.png"; 
+import logobg from "../logobg.png";
 
 function HomePage() {
   return (
-    <div style={{
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      width: "100%",
-      position: "relative", 
-      minHeight: "100vh", 
-    }}>
-      <Navbar />
-      <h1 style={{ marginTop: "20px" }}>Welcome to Pawologue!</h1>
-      <div style={{
+    <div
+      style={{
         display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
         width: "100%",
-        justifyContent: "space-around",
-        flexWrap: "wrap"
-      }}>
-        <div style={{
+        position: "relative",
+        minHeight: "98vh",
+      }}
+    >
+      <Navbar />
+
+      <div
+        style={{
+          width: "100%",
           display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          margin: "20px",
-          marginTop:"20px",
-          marginLeft:"100px",
-          backgroundColor: "#eeebf0",
-          borderRadius: "20px",
-          padding: "20px",
-          width: "600px", 
-          height: "350px"
-        }}>
+          justifyContent: "space-around",
+          flexWrap: "wrap",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            margin: "20px",
+            marginLeft: "40px",
+            backgroundColor: "#eeebf0",
+            borderRadius: "20px",
+            padding: "20px",
+            width: "600px",
+            height: "350px",
+          }}
+        >
           <img
             src={dogPhoto}
             style={{ width: "300px", marginRight: "20px", height: "300px" }}
@@ -53,29 +58,31 @@ function HomePage() {
             </p>
           </div>
         </div>
-        <div style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          margin: "20px",
-          marginTop: "300px",
-          marginRight: "100px",
-          backgroundColor: "#eeebf0",
-          borderRadius: "20px",
-          padding: "20px",
-          width: "600px", 
-          height: "350px"
-        }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            margin: "20px",
+            marginTop: "140px",
+            marginRight: "100px",
+            backgroundColor: "#eeebf0",
+            borderRadius: "20px",
+            padding: "20px",
+            width: "600px",
+            height: "350px",
+          }}
+        >
           <div style={{ maxWidth: "300px", marginRight: "20px" }}>
             <h3>🐱 Cats</h3>
             <p>
               Cats are small carnivorous mammals known for their agility, grace,
               and independent nature. They belong to the Felidae family, which
-              also includes lions, tigers, and other wild cats. Domestic cats are
-              descended from wild ancestors that were domesticated over 10,000
-              years ago, likely for their ability to control pests such as
-              rodents. Cats are highly territorial animals and often establish
-              territories that they defend from other cats.
+              also includes lions, tigers, and other wild cats. Domestic cats
+              are descended from wild ancestors that were domesticated over
+              10,000 years ago, likely for their ability to control pests such
+              as rodents. Cats are highly territorial animals and often
+              establish territories that they defend from other cats.
             </p>
           </div>
           <img
@@ -85,70 +92,70 @@ function HomePage() {
           />
         </div>
       </div>
-      
-      <img 
-        src={logobg} 
+
+      <img
+        src={logobg}
         style={{
           position: "absolute",
           bottom: "20px",
           left: "20px",
           width: "100px",
-          transform: "rotate(15deg)"
+          transform: "rotate(15deg)",
         }}
         alt="Background Logo"
       />
-      <img 
-        src={logobg} 
+      <img
+        src={logobg}
         style={{
           position: "absolute",
           bottom: "10px",
           left: "130px",
           width: "150px",
-          transform: "rotate(-10deg)"
+          transform: "rotate(-10deg)",
         }}
         alt="Background Logo"
       />
-      <img 
-        src={logobg} 
+      <img
+        src={logobg}
         style={{
           position: "absolute",
           bottom: "70px",
           left: "90px",
           width: "80px",
-          transform: "rotate(5deg)"
+          transform: "rotate(5deg)",
         }}
         alt="Background Logo"
       />
-      <img 
-        src={logobg} 
+      <img
+        src={logobg}
         style={{
           position: "absolute",
           bottom: "130px",
           left: "60px",
           width: "80px",
-          transform: "rotate(0deg)"
+          transform: "rotate(0deg)",
         }}
         alt="Background Logo"
       />
-      <img 
-        src={logobg} 
+      <img
+        src={logobg}
         style={{
           position: "absolute",
           bottom: "200px",
           left: "20px",
           width: "50px",
-          transform: "rotate(0deg)"
+          transform: "rotate(0deg)",
         }}
         alt="Background Logo"
       />
-      <img 
-        src={logobg} 
+      <img
+        src={logobg}
         style={{
           position: "absolute",
           bottom: "10px",
           left: "250px",
           width: "100px",
-          transform: "rotate(0deg)"
+          transform: "rotate(0deg)",
         }}
         alt="Background Logo"
       />

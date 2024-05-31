@@ -77,7 +77,7 @@ const DogNotice = () => {
       textDecoration: "none",
       border: "none",
       cursor: "pointer",
-      marginTop:"10px"
+      marginTop: "10px",
     },
   };
   return (
@@ -87,19 +87,17 @@ const DogNotice = () => {
         style={{ display: "flex", alignItems: "center", justifyContent: "end" }}
       >
         <Link to="/petSitting" style={styles.button}>
-        Walk your dog by handing it over to someone else      
+          Walk your dog by handing it over to someone else
         </Link>
       </div>
 
       <div className="pet-container">
-        <div className="column">
-          <h3 className="text">
-          Earn money by walking dogs
-          </h3>
-          <div className="pet-card-wrapper">
+        <div className="columnn">
+          <h3 className="text">Earn money by walking dogs</h3>
+          <div className="pet-card-wrapperr">
             {sittingNotices.map((notice, index) => {
               return (
-                <div key={index} className="pet-card">
+                <div key={index} className="pet-car">
                   <div className="pet-content">
                     {notice.photoURL && (
                       <img

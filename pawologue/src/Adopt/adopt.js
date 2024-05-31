@@ -44,17 +44,20 @@ const Adopt = () => {
 
   const handleStartConversation = async (selectedUser) => {
     try {
-      const response = await fetch("https://pawologue-default-rtdb.firebaseio.com/Messaging.json", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          currentUser: currentUser.name,
-          selectedUser: selectedUser,
-          messages: []
-        }),
-      });
+      const response = await fetch(
+        "https://pawologue-default-rtdb.firebaseio.com/Messaging.json",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            currentUser: currentUser.name,
+            selectedUser: selectedUser,
+            messages: [],
+          }),
+        }
+      );
       if (response.ok) {
         console.log("Messaging data sent to database");
       } else {
@@ -71,12 +74,12 @@ const Adopt = () => {
       <h2>Adopt</h2>
       <div className="pet-container">
         <div className="column">
-          <h3 style={{marginLeft:"5px"}}>Cats</h3>
+          <h3 style={{ marginLeft: "5px" }}>Cats</h3>
           <div className="pet-card-wrapper">
             {adoptedPets.map((pet, index) => {
               if (pet.type === "cat") {
                 return (
-                  <div key={index} className="pet-card">
+                  <div key={index} className="pet-cardd">
                     <div className="pet-content">
                       {pet.photoURL && (
                         <img
@@ -102,7 +105,9 @@ const Adopt = () => {
                           <Link
                             to="/chat"
                             className="button"
-                            onClick={() => handleStartConversation(pet.createdBy)}
+                            onClick={() =>
+                              handleStartConversation(pet.createdBy)
+                            }
                           >
                             Start Conversation
                           </Link>
@@ -127,9 +132,9 @@ const Adopt = () => {
             {adoptedPets.map((pet, index) => {
               if (pet.type === "dog") {
                 return (
-                  <div key={index} className="pet-card">
+                  <div key={index} className="pet-cardd">
                     <div className="pet-content">
-                    {pet.photoURL && (
+                      {pet.photoURL && (
                         <img
                           src={pet.photoURL}
                           alt=""
@@ -153,7 +158,9 @@ const Adopt = () => {
                           <Link
                             to="/chat"
                             className="button"
-                            onClick={() => handleStartConversation(pet.createdBy)}
+                            onClick={() =>
+                              handleStartConversation(pet.createdBy)
+                            }
                           >
                             Start Conversation
                           </Link>
