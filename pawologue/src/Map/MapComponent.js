@@ -4,7 +4,7 @@ import { Loader } from "@googlemaps/js-api-loader";
 import Navbar from "../Navbar";
 import "./mapComponent.css";
 
-const API_KEY = "AIzaSyDn_2p8NJHqWX_vHzv6MKyV7786XwUGtzo";
+const API_KEY = "";
 const defaultCenter = {
   lat: 39.7776,
   lng: 30.5162,
