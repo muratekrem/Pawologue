@@ -2,7 +2,7 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
-    height: 65vh; /* Tüm ekranı kapsaması için */
+    height: 65vh; 
   }
   
   .pairing-item {
@@ -14,7 +14,7 @@
   .pairing-photo-wrapper {
     display: inline-block;
     transition: transform 0.3s ease-in-out;
-    margin-top: 10px; /* Fotoğrafların başlıklardan biraz aşağıda olmasını sağlar */
+    margin-top: 10px; 
   }
   
   .pairing-photo-wrapper:hover .pairing-photo {
@@ -22,10 +22,10 @@
   }
   
   .pairing-photo {
-    width: 400px; /* Fotoğrafın başlangıç genişliği */
-    height: 400px; /* Fotoğrafın başlangıç yüksekliği */
-    object-fit: cover; /* Fotoğrafın içeriğinin boyutuna göre kırpılmasını sağlar */
-    cursor: pointer; /* Fare imlecinin değişmesi için */
+    width: 400px; 
+    height: 400px; 
+    object-fit: cover; 
+    cursor: pointer; 
   }
   
   h2 {
@@ -45,8 +45,8 @@
     margin: 5px 2px;
   }
   .disabled-link {
-    pointer-events: none; /* Linklere tıklanamaz */
-    opacity: 0.5; /* Opaklık azalır */
-    cursor: not-allowed; /* Fare imleci değiştirilir */
+    pointer-events: none; 
+    opacity: 0.5; 
+    cursor: not-allowed; 
   }
   

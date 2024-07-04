@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import Navbar from "../Navbar";
 import dogPhoto from "../dog.jpg";
 import catPhoto from "../cat.jpg";
-import "./pairing.css"; // Stil dosyasını import edin
+import "./pairing.css"; 
 
 const Pairing = () => {
   const [currentUser, setCurrentUser] = useState(null);

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import app from './firebase';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-import { useNavigate } from 'react-router-dom'; // useHistory yerine useNavigate kullanıyoruz
+import { useNavigate } from 'react-router-dom'; 
 
 function Signup({ onSignup }) {
-  const navigate = useNavigate(); // useNavigate kancasını kullanarak tarayıcı geçişini yönetebiliriz
+  const navigate = useNavigate(); 
 
   const [formData, setFormData] = useState({
     email: '',
@@ -18,7 +18,7 @@ function Signup({ onSignup }) {
 
   const [phoneNumberError, setPhoneNumberError] = useState(false);
   const [error, setError] = useState('');
-  const [successMessage, setSuccessMessage] = useState(''); // Kayıt başarılı olduğunda görüntülenecek mesaj
+  const [successMessage, setSuccessMessage] = useState(''); 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -75,19 +75,16 @@ function Signup({ onSignup }) {
         console.log("Message didn't send. Error!")
     }
   
-      // Başarılı kayıt durumunda, burada setUserName veya benzeri bir fonksiyonla kullanıcı adını navbar'a iletilebilir
       if (onSignup) {
         onSignup(formData.name);
       }
       console.log('User registered successfully!');
   
-      // Kayıt başarılı olduğunda successMessage state'ini güncelle
       setSuccessMessage('Your registration to the system has been successfully created.');
   
-      // Başarılı kayıt durumunda anasayfaya yönlendirme işlemi
       setTimeout(() => {
-        navigate('/login'); // Anasayfaya yönlendirme
-      }, 3000); // 3 saniye sonra yönlendirme yapılacak
+        navigate('/login'); 
+      }, 3000); 
     } catch (error) {
       setError(error.message);
     }
@@ -139,9 +136,7 @@ function Signup({ onSignup }) {
           </div>
         </form>
       </div>
-      {/* Kayıt başarılı olduğunda görüntülenecek mesaj */}
       {successMessage && <p style={styles.successMessage}>{successMessage}</p>}
-      {/* Hata mesajı */}
       {error && <p style={styles.error}>{error}</p>}
     </div>
   );

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../Navbar";
-import "./addCat.css"; // Stil için CSS dosyasını içe aktar
+import "./addCat.css"; 
 import {
   getStorage,
   ref,
@@ -11,8 +11,8 @@ import {
 const AddCat = ({ onSubmit }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [submittedNotices, setSubmittedNotices] = useState([]);
-  const [fileInputKey, setFileInputKey] = useState(Date.now()); // File input key
-  const [submitSuccess, setSubmitSuccess] = useState(false); // Submit başarılı mı?
+  const [fileInputKey, setFileInputKey] = useState(Date.now()); 
+  const [submitSuccess, setSubmitSuccess] = useState(false); 
   const storage = getStorage();
 
   useEffect(() => {
@@ -119,10 +119,10 @@ const AddCat = ({ onSubmit }) => {
                 if (res.ok) {
                   console.log("Message sent to database");
                   onSubmit(updatedCatInfo);
-                  setSubmitSuccess(true); // Başarı durumunu ayarla
+                  setSubmitSuccess(true); 
                   console.log("123");
                   console.log(submitSuccess);
-                  setCatInfo({  // Form alanlarını sıfırla
+                  setCatInfo({  
                     name: "",      
                     location:"",             
                     breed: "",
@@ -134,10 +134,10 @@ const AddCat = ({ onSubmit }) => {
                     photo: null,
                     submitDone:true,
                   });
-                  setFileInputKey(Date.now()); // Input alanını sıfırla
+                  setFileInputKey(Date.now()); 
                   setTimeout(() => {
                     setSubmitSuccess(false);
-                  }, 5000); // 5 saniye sonra mesajı gizle
+                  }, 5000); 
                 } else {
                   console.log("Message didn't send. Error!");
                 }
@@ -308,7 +308,7 @@ const AddCat = ({ onSubmit }) => {
             <option>Healthy</option>
           </select>
           <input
-            key={fileInputKey} // Key değişikliği burada uygulanıyor
+            key={fileInputKey}
             type="file"
             name="photo"
             onChange={handlePhotoChange}

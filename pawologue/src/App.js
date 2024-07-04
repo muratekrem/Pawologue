@@ -27,18 +27,12 @@ function App() {
   };
 
   const handleSubmitDog = (dogData) => {
-    // Here you can handle the submission of the dog data
-    // For example, you can save it to a database or perform any other necessary actions
     console.log("Submitting dog data:", dogData);
   };
   const handleSubmitCat = (catData) => {
-    // Here you can handle the submission of the dog data
-    // For example, you can save it to a database or perform any other necessary actions
     console.log("Submitting dog data:", catData);
   };
   const handleSubmitPetSitting = (petData) => {
-    // Here you can handle the submission of the dog data
-    // For example, you can save it to a database or perform any other necessary actions
     console.log("Submitting dog data:", petData);
   };
 

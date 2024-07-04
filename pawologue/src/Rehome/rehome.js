@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../Navbar";
-import "./rehome.css"; // Stil için CSS dosyasını içe aktar
+import "./rehome.css";
 import {
   getStorage,
   ref,
@@ -11,7 +11,7 @@ import {
 const Rehome = ({ onSubmit }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [submittedNotices, setSubmittedNotices] = useState([]);
-  const [fileInputKey, setFileInputKey] = useState(Date.now()); // File input key
+  const [fileInputKey, setFileInputKey] = useState(Date.now()); 
   const storage = getStorage();
 
   useEffect(() => {
@@ -164,7 +164,7 @@ const Rehome = ({ onSubmit }) => {
                   });
                   setDogSelected(false);
                   setCatSelected(false);
-                  setFileInputKey(Date.now()); // Input alanını sıfırla
+                  setFileInputKey(Date.now()); 
                 } else {
                   console.log("Message didn't send. Error!");
                 }
@@ -259,7 +259,7 @@ const Rehome = ({ onSubmit }) => {
             onChange={handleChange}
           />
           <input
-            key={fileInputKey} // unique key to reset the input
+            key={fileInputKey} 
             type="file"
             name="photo"
             onChange={handlePhotoChange}

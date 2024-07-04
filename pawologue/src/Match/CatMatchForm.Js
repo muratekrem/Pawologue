@@ -9,7 +9,7 @@ const CatMatchForm = () => {
   const [result, setResult] = useState([]);
   const [matchingCats, setMatchingCats] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
-  const [showAllCats, setShowAllCats] = useState(true); // Yeni durum
+  const [showAllCats, setShowAllCats] = useState(true); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,7 +35,7 @@ const CatMatchForm = () => {
       if (response.ok) {
         let result = await response.json();
         setResult(result.indices);
-        setShowAllCats(false); // "Find Match" butonuna basıldığında false yap
+        setShowAllCats(false);
       } else {
         console.error("Failed to fetch predictions");
       }
@@ -268,7 +268,7 @@ const CatMatchForm = () => {
               return null;
             })
           : matchingCats
-              .filter((cat, index) => result.includes(index)) // Eşleşen kedileri filtrele
+              .filter((cat, index) => result.includes(index)) 
               .map((pet, index) => {
                 if (currentUser) {
                   return (

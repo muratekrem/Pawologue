@@ -16,9 +16,7 @@ function Profile() {
     console.log('Location:', location);
   }, [location]);
 
-  // Load currentUser from local storage when component mounts
   useEffect(() => {
-    // Load currentUser from local storage
     const storedCurrentUser = localStorage.getItem(`currentUser`);
     if (storedCurrentUser) {
       setCurrentUser(JSON.parse(storedCurrentUser));
@@ -53,15 +51,13 @@ function Profile() {
           const user = userData[userId];
           if (user.email === emailToFind) {
             foundUser = user;
-            break; // Exit loop if user is found
+            break; 
           }
         }
       }
       setCurrentUser(foundUser);
-      // Store currentUser in local storage with a generic key
       localStorage.setItem(`currentUser`, JSON.stringify(foundUser));
 
-      // Emit currentUser data to the server
       console.log(currentUser);
       // socket.emit('current_user', foundUser);
     }

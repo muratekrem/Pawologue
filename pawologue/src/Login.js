@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { useNavigate } from 'react-router-dom'; // useNavigate hook'u ekledik
-// import io from 'socket.io-client'; // Import Socket.io client
+import { useNavigate } from 'react-router-dom'; 
+// import io from 'socket.io-client'; 
 
 // const socket = io('http://localhost:3001'); // Connect to the server
 
@@ -12,7 +12,7 @@ function Login() {
   });
 
   const [error, setError] = useState('');
-  const navigate = useNavigate(); // useNavigate hook'unu tanımladık
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -32,7 +32,7 @@ function Login() {
       console.log(formData.email);
       // socket.emit('user_login', { email: formData.email });
       
-      navigate('/profile', { state: { email: formData.email } }); // Profil sayfasına yönlendirme ve e-postayı ilete
+      navigate('/profile', { state: { email: formData.email } }); 
     } catch (error) {
       setError(error.message);
     }

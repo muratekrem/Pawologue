@@ -1,15 +1,14 @@
-/* DogNotice.css */
 .pet-content {
   padding: 10px;
-  margin: 0; /* İçeriği sarmalayan boşluk */
+  margin: 0;
   height: auto;
   align-items: center;
 }
 
 .pet-details {
   display: flex;
-  flex-direction: column; /* Metin içeriğini dikey olarak sıralama */
-  align-items: center; /* İçeriği yatayda ortala */
+  flex-direction: column; 
+  align-items: center; 
 }
 
 .pet-container {
@@ -33,16 +32,15 @@
 }
 
 .pet-car {
-  width: 20%; /* İki ilanı yan yana sığdırmak için %50 genişlik, kenar boşluğunu da düşünerek 10px çıkarıyoruz */
-  /* İlanlar arasında boşluk bırak */
+  width: 20%; 
   padding: 10px;
-  border: 3px solid #ccc; /* Border ekleme */
+  border: 3px solid #ccc;
 }
 
 .pet-card-wrapperr {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around; /* İlan kartlarını eşit şekilde dağıt */
+  justify-content: space-around; 
 }
 
 .pet-card img {
@@ -69,8 +67,8 @@ p {
 }
 
 button[disabled] {
-  background-color: #d3d3d3; /* Dull grey */
-  color: #808080; /* Dark grey */
+  background-color: #d3d3d3; 
+  color: #808080; 
 }
 .text {
   display: flex;
@@ -84,7 +82,6 @@ button[disabled] {
   }
 }
 
-/* Burası Lar */
 @media (min-width: 1024px) {
   .pet-card-wrapperr {
     justify-content: space-evenly;

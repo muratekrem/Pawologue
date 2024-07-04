@@ -68,7 +68,6 @@ p {
   margin-top: 10px;
 }
 
-/* Burası Med */
 @media (min-width: 768px) {
   .column {
     width: 47%;
@@ -89,7 +88,6 @@ p {
   }
 }
 
-/* Burası Lar */
 @media (min-width: 1024px) {
   .pet-card-wrapper {
     justify-content: space-between;

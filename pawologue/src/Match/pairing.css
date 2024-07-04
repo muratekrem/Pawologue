@@ -62,7 +62,7 @@ button:hover {
   grid-template-columns: repeat(
     auto-fit,
     minmax(250px, 1fr)
-  ); /* İlginç bir genişlikte (250px) kolonlara bölün, kolonlar ekrana sığdıkça satıra yerleşir */
+  );
   gap: 20px;
   padding: 20px;
   grid-auto-rows: min-content;
@@ -88,12 +88,12 @@ button:hover {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  flex-grow: 1; /* İlan içeriğinin dikeyde genişlemesini sağlar */
+  flex-grow: 1; 
 }
 
 .pet-details {
   margin-top: 8px;
-  flex-shrink: 0; /* Detayların kartın dışına taşmasını önler */
+  flex-shrink: 0; 
 }
 
 .pet-info-text {

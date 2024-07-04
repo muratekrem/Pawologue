@@ -10,18 +10,17 @@ import {
 } from "firebase/storage";
 
 const PetSitting = ({ onSubmit, onStartConversation }) => {
-  const [currentUser, setCurrentUser] = useState(null); // currentUser durumunu tanımla
-  const [submittedNotices, setSubmittedNotices] = useState([]); // Gönderilmiş ilanları saklamak için bir durum tanımla
-  const [fileInputKey, setFileInputKey] = useState(Date.now()); // File input key
+  const [currentUser, setCurrentUser] = useState(null); 
+  const [submittedNotices, setSubmittedNotices] = useState([]); 
+  const [fileInputKey, setFileInputKey] = useState(Date.now()); 
   const storage = getStorage();
 
   useEffect(() => {
-    // localStorage'dan currentUser'ı al
     const storedCurrentUser = localStorage.getItem(`currentUser`);
     if (storedCurrentUser) {
       setCurrentUser(JSON.parse(storedCurrentUser));
     }
-  }, []); // useEffect sadece ilk render sırasında çalışacak şekilde ayarlandı
+  }, []); 
 
   const [petInfo, setPetInfo] = useState({
     name: "",
@@ -29,11 +28,10 @@ const PetSitting = ({ onSubmit, onStartConversation }) => {
     location: "",
     hourlyRate: "",
     photo: null,
-    submitDone: false, // submitDone durumunu ekle
+    submitDone: false, 
   });
 
   useEffect(() => {
-    // Gönderilen ilanları almak için Firebase Realtime Database'den veri çek
     const fetchNotices = async () => {
       try {
         const response = await fetch(
@@ -49,7 +47,6 @@ const PetSitting = ({ onSubmit, onStartConversation }) => {
             id: key,
             ...data[key],
           };
-          // Kullanıcı giriş yapmış ve ilan sahibi kendisi değilse, ilanları gösterme
           if (!currentUser || notice.createdBy !== currentUser.name) {
             continue;
           }
@@ -62,7 +59,7 @@ const PetSitting = ({ onSubmit, onStartConversation }) => {
     };
 
     fetchNotices();
-  }, [currentUser]); // useEffect sadece ilk render sırasında çalışacak şekilde ayarlandı
+  }, [currentUser]); 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -82,43 +79,33 @@ const PetSitting = ({ onSubmit, onStartConversation }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Oluşturulan pet bilgilerini güncelle
     const updatedPetInfo = {
       ...petInfo,
-      createdBy: currentUser.name, // Kullanıcı adını kullan
-      email: currentUser.email, // Kullanıcı e-posta adresini kullan
+      createdBy: currentUser.name, 
+      email: currentUser.email, 
     };
 
     try {
-      // Firebase Storage'a dosyayı yükle
       const storageRef = ref(storage, "photos/" + petInfo.photo.name);
       const uploadTask = uploadBytesResumable(storageRef, petInfo.photo);
 
-      // Yükleme tamamlandığında işlem yap
       uploadTask.on(
         "state_changed",
         (snapshot) => {
-          // Yükleme sırasında durumu takip et
           const progress =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
           console.log("Upload is " + progress + "% done");
         },
         (error) => {
-          // Hata durumunda işlem yap
           console.error("Error uploading file", error);
         },
         () => {
-          // Yükleme tamamlandığında işlem yap
           console.log("File uploaded successfully");
 
-          // Dosyanın indirme URL'sini al
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             console.log("File available at", downloadURL);
-            // Dosyanın URL'sini güncellenmiş pet bilgilerine ekle
             updatedPetInfo.photoURL = downloadURL;
 
-            // Firebase Realtime Database'e POST isteği gönder
             fetch(
               "https://pawologue-default-rtdb.firebaseio.com/petSitting.json",
               {
@@ -132,9 +119,7 @@ const PetSitting = ({ onSubmit, onStartConversation }) => {
               .then((res) => {
                 if (res.ok) {
                   console.log("Message sent to database");
-                  // İşlem başarılı ise onSubmit fonksiyonunu çağırarak veriyi Adopt bileşenine aktar
                   onSubmit(updatedPetInfo);
-                  // Submit yapıldıktan sonra form alanlarını sıfırla
                   setPetInfo({
                     name: "",
                     breed: "",
@@ -143,7 +128,7 @@ const PetSitting = ({ onSubmit, onStartConversation }) => {
                     photo: null,
                     submitDone: true,
                   });
-                  setFileInputKey(Date.now()); // Input alanını sıfırla
+                  setFileInputKey(Date.now());
                 } else {
                   console.log("Message didn't send. Error!");
                 }
@@ -160,7 +145,6 @@ const PetSitting = ({ onSubmit, onStartConversation }) => {
   };
 
   const removeNotice = (id) => {
-    // Firebase Realtime Database'den ilanı kaldır
     fetch(
       `https://pawologue-default-rtdb.firebaseio.com/petSitting/${id}.json`,
       {
@@ -171,7 +155,6 @@ const PetSitting = ({ onSubmit, onStartConversation }) => {
         if (!response.ok) {
           throw new Error("Failed to delete notice");
         }
-        // Başarılı ise güncellenmiş ilanlar listesini ayarla
         const updatedNotices = submittedNotices.filter(
           (notice) => notice.id !== id
         );
